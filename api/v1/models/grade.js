@@ -14,12 +14,15 @@ module.exports = (sequelize, DataTypes) => {
   }
   grade.init(
     {
-      description: DataTypes.STRING,
+      description: {
+        type: DataTypes.STRING,
+        unique: true,
+      },
     },
     {
       sequelize,
       modelName: "GradeModel",
-      tableName: "grade",
+      tableName: "grades",
     }
   );
   return grade;
