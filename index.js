@@ -9,7 +9,5 @@ app.use(`/api/${process.env.VERSION}/role`, routesRoles);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
-  console.log(
-    `Server is listening on ${port} - ${process.env.DB_DEV_USERNAME}`
-  );
+  console.log(`Server is listening on ${port} `);
 });
