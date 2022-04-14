@@ -2,10 +2,16 @@ const express = require("express");
 const app = express();
 require("dotenv").config();
 
-//all routes exports
-const routesRoles = require("./api/v1/routes/role");
+const errorHandler = require(`./api/${process.env.VERSION}/middlewares/error-handler`);
 
-app.use(`/api/${process.env.VERSION}/role`, routesRoles);
+//all routes exports
+const routesCrudStatique = require("./api/v1/routes/crud-statique");
+
+//middlewares
+app.use(express.json());
+
+app.use(`/api/${process.env.VERSION}/crud`, routesCrudStatique);
+app.use(errorHandler);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
