@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      models.Role.hasOne(models.Auth);
+      models.RoleModel.hasOne(models.AuthModel);
     }
   }
   Role.init(
@@ -18,7 +18,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Role",
+      modelName: "RoleModel",
+      tableName: "roles",
     }
   );
   return Role;
