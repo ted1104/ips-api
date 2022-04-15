@@ -56,8 +56,8 @@ const createAgent = asyncWrapper(async (req, res) => {
 
   //hash password before saving data auth for user
   const hashedPass = await bcryptHelper.myHashPassword(password);
-  const dtAuth = { ...body.auth, agentId, password: hashedPass };
-  const savedAuth = await AuthModel.create(dtAuth);
+  const dtAuth = { ...body.auth, password: hashedPass, agentId };
+  await AuthModel.create(dtAuth);
 
   const msg = "L'agent a été crée avec succès";
   return successHandler.Created(res, saved, msg);
