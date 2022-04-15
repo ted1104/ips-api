@@ -6,12 +6,14 @@ const errorHandler = require(`./api/${process.env.VERSION}/middlewares/error-han
 const notFoundPage = require(`./api/${process.env.VERSION}/middlewares/not-found-page`);
 
 //all routes exports
-const routesCrudStatique = require("./api/v1/routes/crud-statique");
+const routesCrudStatique = require(`./api/${process.env.VERSION}/routes/crud-statique`);
+const routeAgents = require(`./api/${process.env.VERSION}/routes/agent`);
 
 //middlewares
 app.use(express.json());
 
 app.use(`/api/${process.env.VERSION}`, routesCrudStatique);
+app.use(`/api/${process.env.VERSION}/agent`, routeAgents);
 app.use(notFoundPage);
 app.use(errorHandler);
 

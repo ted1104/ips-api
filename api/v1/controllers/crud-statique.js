@@ -1,7 +1,6 @@
 const asyncWrapper = require("../middlewares/async");
-
 const { BadRequest } = require("../errors");
-const { SuccessHandler } = require("../helpers");
+const { successHandler } = require("../helpers");
 
 const {
   RoleModel,
@@ -20,7 +19,7 @@ const {
 */
 const getAllRole = asyncWrapper(async (req, res) => {
   const roles = await RoleModel.findAll();
-  return SuccessHandler.Ok(res, roles);
+  return successHandler.Ok(res, roles);
 });
 
 const getOneRole = asyncWrapper(async (req, res, next) => {
@@ -29,7 +28,7 @@ const getOneRole = asyncWrapper(async (req, res, next) => {
   if (!oneRole) {
     throw new BadRequest("No data");
   }
-  return SuccessHandler.Ok(res, oneRole);
+  return successHandler.Ok(res, oneRole);
 });
 
 const createRole = asyncWrapper(async (req, res) => {
@@ -41,7 +40,7 @@ const createRole = asyncWrapper(async (req, res) => {
   }
   const data = await RoleModel.create(body);
   const msg = "La rôle a été créé avec succès";
-  return SuccessHandler.Created(res, data, msg);
+  return successHandler.Created(res, data, msg);
 });
 
 /* 
@@ -53,7 +52,7 @@ const createRole = asyncWrapper(async (req, res) => {
 
 const getGrade = asyncWrapper(async (req, res) => {
   const grades = await GradeModel.findAll();
-  return SuccessHandler.Ok(res, grades);
+  return successHandler.Ok(res, grades);
 });
 
 const createGrade = asyncWrapper(async (req, res) => {
@@ -67,7 +66,7 @@ const createGrade = asyncWrapper(async (req, res) => {
   }
   const grade = await GradeModel.create(data);
   const msg = "La grade a été créée avec succès";
-  return SuccessHandler.Created(res, grade, msg);
+  return successHandler.Created(res, grade, msg);
 });
 
 /* 
@@ -79,7 +78,7 @@ const createGrade = asyncWrapper(async (req, res) => {
 
 const getFonction = asyncWrapper(async (req, res) => {
   const data = await FonctionModel.findAll();
-  return SuccessHandler.Ok(res, data);
+  return successHandler.Ok(res, data);
 });
 
 const createFonction = asyncWrapper(async (req, res) => {
@@ -91,7 +90,7 @@ const createFonction = asyncWrapper(async (req, res) => {
   }
   const data = await FonctionModel.create(body);
   const msg = "La fonction a été créée avec succès";
-  return SuccessHandler.Created(res, data, msg);
+  return successHandler.Created(res, data, msg);
 });
 
 /* 
@@ -103,7 +102,7 @@ const createFonction = asyncWrapper(async (req, res) => {
 
 const getCategorie = asyncWrapper(async (req, res) => {
   const data = await CategorieProfModel.findAll();
-  return SuccessHandler.Ok(res, data);
+  return successHandler.Ok(res, data);
 });
 
 const createCategorie = asyncWrapper(async (req, res) => {
@@ -115,7 +114,7 @@ const createCategorie = asyncWrapper(async (req, res) => {
   }
   const data = await CategorieProfModel.create(body);
   const msg = "La catégorie personnelle a été créée avec succès";
-  return SuccessHandler.Created(res, data, msg);
+  return successHandler.Created(res, data, msg);
 });
 
 /* 
@@ -127,7 +126,7 @@ const createCategorie = asyncWrapper(async (req, res) => {
 
 const getStructre = asyncWrapper(async (req, res) => {
   const data = await StructureModel.findAll();
-  return SuccessHandler.Ok(res, data);
+  return successHandler.Ok(res, data);
 });
 
 const createStructure = asyncWrapper(async (req, res) => {
@@ -139,7 +138,7 @@ const createStructure = asyncWrapper(async (req, res) => {
   }
   const data = await StructureModel.create(body);
   const msg = "La structure a été créée avec succès";
-  return SuccessHandler.Created(res, data, msg);
+  return successHandler.Created(res, data, msg);
 });
 
 /* 
@@ -151,7 +150,7 @@ const createStructure = asyncWrapper(async (req, res) => {
 
 const getZoneSante = asyncWrapper(async (req, res) => {
   const data = await ZoneSanteModel.findAll();
-  return SuccessHandler.Ok(res, data);
+  return successHandler.Ok(res, data);
 });
 
 const createZoneSante = asyncWrapper(async (req, res) => {
@@ -162,7 +161,7 @@ const createZoneSante = asyncWrapper(async (req, res) => {
   }
   const data = await ZoneSanteModel.create(body);
   const msg = "La zone de santé a été créée avec succès";
-  return SuccessHandler.Created(res, data, msg);
+  return successHandler.Created(res, data, msg);
 });
 
 module.exports = {

@@ -1,5 +1,7 @@
-const SuccessHandler = require("./success-handler");
+const successHandler = require("./success-handler");
+const bcryptHelper = require("./hash-password");
 
 module.exports = {
-  SuccessHandler,
+  successHandler,
+  bcryptHelper,
 };

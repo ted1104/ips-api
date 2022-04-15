@@ -9,13 +9,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.CategorieProfModel);
-      this.belongsTo(models.FonctionModel);
-      this.belongsTo(models.GradeModel);
-      this.belongsTo(models.StructureModel);
-      this.belongsTo(models.ZoneSanteModel);
+      this.belongsTo(models.CategorieProfModel, { foreignKey: "catProfId" });
+      this.belongsTo(models.FonctionModel, { foreignKey: "fonctionId" });
+      this.belongsTo(models.GradeModel, { foreignKey: "gradeId" });
+      this.belongsTo(models.StructureModel, { foreignKey: "structureId" });
+      this.belongsTo(models.ZoneSanteModel, { foreignKey: "zonesanteId" });
 
-      this.hasOne(models.AuthModel);
+      this.hasOne(models.AuthModel, { foreignKey: "agentId" });
     }
   }
   Agent.init(
