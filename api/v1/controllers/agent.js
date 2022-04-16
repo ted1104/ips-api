@@ -1,6 +1,8 @@
 const asyncWrapper = require("../middlewares/async");
-const { BadRequest } = require("../errors");
+const { BadRequest, Unauthenticated } = require("../errors");
 const { successHandler, bcryptHelper } = require("../helpers");
+
+const jwt = require("jsonwebtoken");
 
 //models
 const {
@@ -13,9 +15,9 @@ const {
   AgentModel,
   AuthModel,
 } = require("../models");
-const { hashPassword } = require("../helpers/hash-password");
 
 const getAllAgents = asyncWrapper(async (req, res) => {
+  console.log(req.user);
   const data = await AgentModel.findAll();
   return successHandler.Ok(res, data);
 });
