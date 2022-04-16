@@ -2,7 +2,7 @@ const { StatusCodes } = require("http-status-codes");
 const { CustomError } = require("../errors");
 
 const errorHandler = (err, req, res, next) => {
-  // console.log(err);
+  console.log(err);
   if (err instanceof CustomError) {
     return res
       .status(err.statusCode)

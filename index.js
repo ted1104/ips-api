@@ -16,7 +16,7 @@ app.use(express.json());
 
 app.use(`/api/${process.env.VERSION}`, routesCrudStatique);
 app.use(`/api/${process.env.VERSION}/agent`, routeAgents);
-app.use(`/api/${process.env.VERSION}/login`, routeAuth);
+app.use(`/api/${process.env.VERSION}/auth`, routeAuth);
 app.use(notFoundPage);
 app.use(errorHandler);
 
