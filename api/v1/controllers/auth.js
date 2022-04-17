@@ -32,6 +32,15 @@ const login = asyncWrapper(async (req, res) => {
   const { username, password } = data;
   const existUser = await AuthModel.findOne({
     where: { username },
+    include: [
+      {
+        model: AgentModel,
+      },
+      {
+        model: RoleModel,
+        attributes: ["id", "description"],
+      },
+    ],
   });
 
   if (!existUser) {
@@ -58,7 +67,7 @@ const login = asyncWrapper(async (req, res) => {
   const token = jwt.sign({ id }, process.env.JWT_SECRET_KEY, {
     expiresIn: process.env.EXPIRED_IN,
   });
-  return successHandler.Ok(res, { token: token, existUser });
+  return successHandler.Ok(res, { token: token, user: existUser });
 });
 
 module.exports = { login };
