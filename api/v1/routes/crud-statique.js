@@ -17,13 +17,33 @@ const {
   createZoneSante,
 } = require("../controllers/crud-statique");
 
-router.route("/role").get(getAllRole).post(createRole);
-router.route("/role/:id").get(getOneRole);
+const authMiddleware = require("../middlewares/auth");
 
-router.route("/grade").get(getGrade).post(createGrade);
-router.route("/fonction").get(getFonction).post(createFonction);
-router.route("/catpersonnelle").get(getCategorie).post(createCategorie);
-router.route("/structure").get(getStructre).post(createStructure);
-router.route("/zone-sante").get(getZoneSante).post(createZoneSante);
+router
+  .route("/role")
+  .get(authMiddleware, getAllRole)
+  .post(authMiddleware, createRole);
+router.route("/role/:id").get(authMiddleware, getOneRole);
+
+router
+  .route("/grade")
+  .get(authMiddleware, getGrade)
+  .post(authMiddleware, createGrade);
+router
+  .route("/fonction")
+  .get(authMiddleware, getFonction)
+  .post(authMiddleware, createFonction);
+router
+  .route("/catpersonnelle")
+  .get(authMiddleware, getCategorie)
+  .post(authMiddleware, createCategorie);
+router
+  .route("/structure")
+  .get(authMiddleware, getStructre)
+  .post(authMiddleware, createStructure);
+router
+  .route("/zone-sante")
+  .get(authMiddleware, getZoneSante)
+  .post(authMiddleware, createZoneSante);
 
 module.exports = router;

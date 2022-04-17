@@ -9,6 +9,7 @@ const {
   CategorieProfModel,
   StructureModel,
   ZoneSanteModel,
+  AuthModel,
 } = require("../models");
 
 /* 
