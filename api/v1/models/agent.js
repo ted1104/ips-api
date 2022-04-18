@@ -9,11 +9,26 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.CategorieProfModel, { foreignKey: "catProfId" });
-      this.belongsTo(models.FonctionModel, { foreignKey: "fonctionId" });
-      this.belongsTo(models.GradeModel, { foreignKey: "gradeId" });
-      this.belongsTo(models.StructureModel, { foreignKey: "structureId" });
-      this.belongsTo(models.ZoneSanteModel, { foreignKey: "zonesanteId" });
+      this.belongsTo(models.CategorieProfModel, {
+        foreignKey: "catProfId",
+        as: "categorie_detail_id",
+      });
+      this.belongsTo(models.FonctionModel, {
+        foreignKey: "fonctionId",
+        as: "fonction_detail_id",
+      });
+      this.belongsTo(models.GradeModel, {
+        foreignKey: "gradeId",
+        as: "grade_detail_id",
+      });
+      this.belongsTo(models.StructureModel, {
+        foreignKey: "structureId",
+        as: "structure_detail_id",
+      });
+      this.belongsTo(models.ZoneSanteModel, {
+        foreignKey: "zonesanteId",
+        as: "zone_sante_detail_id",
+      });
 
       this.hasOne(models.AuthModel, { foreignKey: "agentId" });
     }

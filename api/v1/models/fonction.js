@@ -9,7 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.hasMany(models.AgentModel, { foreignKey: "fonctionId" });
+      this.hasMany(models.AgentModel, {
+        foreignKey: "fonctionId",
+        as: "fonction_detail_id",
+      });
     }
   }
   fonction.init(

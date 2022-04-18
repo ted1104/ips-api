@@ -35,9 +35,11 @@ const login = asyncWrapper(async (req, res) => {
     include: [
       {
         model: AgentModel,
+        as: "agent_id_detail",
       },
       {
         model: RoleModel,
+        as: "role_id_detail",
         attributes: ["id", "description"],
       },
     ],

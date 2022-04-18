@@ -9,8 +9,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.RoleModel, { foreignKey: "roleId" });
-      this.belongsTo(models.AgentModel, { foreignKey: "agentId" });
+      this.belongsTo(models.RoleModel, {
+        foreignKey: "roleId",
+        as: "role_id_detail",
+      });
+      this.belongsTo(models.AgentModel, {
+        foreignKey: "agentId",
+        as: "agent_id_detail",
+      });
     }
   }
   Auth.init(

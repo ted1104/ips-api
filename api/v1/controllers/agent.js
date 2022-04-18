@@ -18,7 +18,35 @@ const {
 
 const getAllAgents = asyncWrapper(async (req, res) => {
   console.log(req.user);
-  const data = await AgentModel.findAll();
+  const data = await AgentModel.findAll({
+    include: [
+      {
+        model: CategorieProfModel,
+        as: "categorie_detail_id",
+        attributes: ["id", "description"],
+      },
+      {
+        model: FonctionModel,
+        as: "fonction_detail_id",
+        attributes: ["id", "description"],
+      },
+      {
+        model: StructureModel,
+        as: "structure_detail_id",
+        attributes: ["id", "description"],
+      },
+      {
+        model: GradeModel,
+        as: "grade_detail_id",
+        attributes: ["id", "description"],
+      },
+      {
+        model: ZoneSanteModel,
+        as: "zone_sante_detail_id",
+        attributes: ["id", "description"],
+      },
+    ],
+  });
   return successHandler.Ok(res, data);
 });
 
