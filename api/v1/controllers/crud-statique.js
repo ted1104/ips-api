@@ -9,6 +9,7 @@ const {
   CategorieProfModel,
   StructureModel,
   ZoneSanteModel,
+  AuthModel,
 } = require("../models");
 
 /* 
@@ -164,6 +165,34 @@ const createZoneSante = asyncWrapper(async (req, res) => {
   return successHandler.Created(res, data, msg);
 });
 
+/* 
+  #########################
+  #########################
+  #########################
+  ### GET ALL STATIQUE TABLES ###
+*/
+
+const getAllStatique = asyncWrapper(async (req, res) => {
+  const roles = await RoleModel.findAll({ attributes: ["id", "description"] });
+  const grades = await GradeModel.findAll({
+    attributes: ["id", "description"],
+  });
+  const fonction = await FonctionModel.findAll({
+    attributes: ["id", "description"],
+  });
+  const categorie = await CategorieProfModel.findAll({
+    attributes: ["id", "description"],
+  });
+  const structure = await StructureModel.findAll({
+    attributes: ["id", "description"],
+  });
+  const zonesante = await ZoneSanteModel.findAll({
+    attributes: ["id", "description"],
+  });
+
+  const data = { roles, grades, fonction, categorie, structure, zonesante };
+  return successHandler.Ok(res, data);
+});
 module.exports = {
   getAllRole,
   getOneRole,
@@ -178,4 +207,5 @@ module.exports = {
   createStructure,
   getZoneSante,
   createZoneSante,
+  getAllStatique,
 };
