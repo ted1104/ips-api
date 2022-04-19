@@ -35,6 +35,10 @@ module.exports = (sequelize, DataTypes) => {
   }
   Agent.init(
     {
+      uuid: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+      },
       nom: DataTypes.STRING,
       prenom: DataTypes.STRING,
       sexe: DataTypes.INTEGER,

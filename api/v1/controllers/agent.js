@@ -101,4 +101,15 @@ const createAgent = asyncWrapper(async (req, res) => {
   const msg = "L'agent a été crée avec succès";
   return successHandler.Created(res, saved, msg);
 });
-module.exports = { getAllAgents, createAgent };
+
+const getOneAgent = asyncWrapper(async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  const oneAgent = await AgentModel.findOne({ where: { id } });
+
+  if (!oneAgent) {
+    throw new BadRequest("Aucun agent trouvé");
+  }
+  return successHandler.Ok(res, oneAgent);
+});
+module.exports = { getAllAgents, getOneAgent, createAgent };
