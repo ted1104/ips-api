@@ -3,7 +3,10 @@ const { BadRequest } = require("../errors");
 const { successHandler, bcryptHelper } = require("../helpers");
 
 //validation
-const { loginSchemaValidation } = require("../validations");
+const {
+  loginSchemaValidation,
+  registerSchemaValidation,
+} = require("../validations");
 
 //models
 const {
@@ -72,4 +75,57 @@ const login = asyncWrapper(async (req, res) => {
   return successHandler.Ok(res, { token: token, user: existUser });
 });
 
-module.exports = { login };
+const register = asyncWrapper(async (req, res) => {
+  const body = req.body;
+
+  //validation
+  const validation = registerSchemaValidation.validate(body);
+  const { error, value } = validation;
+  if (error) {
+    throw new BadRequest(error.details[0].message);
+  }
+
+  //check if another username with the same email adress already exist
+  const { username, password, agentId } = body;
+  const checkingUsername = await AuthModel.findOne({ where: { username } });
+
+  if (checkingUsername) {
+    throw new BadRequest(
+      "un autre utilisateur avec ce même nom d'utilisateur existe déjà"
+    );
+  }
+
+  //checking if this agent exit
+  const checkingAgent = await AgentModel.findOne({
+    where: {
+      id: agentId,
+    },
+  });
+
+  if (!checkingAgent) {
+    throw new BadRequest(
+      "l'agent a qui vous tentez de créer un compte n'existe pas"
+    );
+  }
+
+  //checking if agent has another account
+  const checkingAnotherAccountExist = await AuthModel.findOne({
+    where: {
+      agentId,
+    },
+  });
+  if (checkingAnotherAccountExist) {
+    throw new BadRequest("Cet agent possède déjà un compte de connexion");
+  }
+
+  //creating authentifications info
+  //hash password before saving data auth for user
+  const hashedPass = await bcryptHelper.myHashPassword(password);
+  const dtAuth = { ...body, password: hashedPass };
+  await AuthModel.create(dtAuth);
+
+  const msg = "Le compte a été bien crée";
+  return successHandler.Created(res, body, msg);
+});
+
+module.exports = { login, register };
