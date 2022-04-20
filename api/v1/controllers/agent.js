@@ -1,6 +1,6 @@
 const asyncWrapper = require("../middlewares/async");
 const { BadRequest, Unauthenticated } = require("../errors");
-const { successHandler, bcryptHelper } = require("../helpers");
+const { successHandler, bcryptHelper, attrb } = require("../helpers");
 const { agentCreateSchemaValidation } = require("../validations");
 
 const jwt = require("jsonwebtoken");
@@ -104,8 +104,51 @@ const createAgent = asyncWrapper(async (req, res) => {
 
 const getOneAgent = asyncWrapper(async (req, res) => {
   const { id } = req.params;
-  console.log(id);
-  const oneAgent = await AgentModel.findOne({ where: { id } });
+  const ids = id.split("--")[0];
+  const uuids = id.split("--")[1];
+  const oneAgent = await AgentModel.findOne({
+    where: { id: ids, uuid: uuids },
+    attributes: attrb.attr_get_one_agent,
+    include: [
+      {
+        model: CategorieProfModel,
+        as: "categorie_detail_id",
+        attributes: ["id", "description"],
+      },
+      {
+        model: FonctionModel,
+        as: "fonction_detail_id",
+        attributes: ["id", "description"],
+      },
+      {
+        model: StructureModel,
+        as: "structure_detail_id",
+        attributes: ["id", "description"],
+      },
+      {
+        model: GradeModel,
+        as: "grade_detail_id",
+        attributes: ["id", "description"],
+      },
+      {
+        model: ZoneSanteModel,
+        as: "zone_sante_detail_id",
+        attributes: ["id", "description"],
+      },
+      {
+        model: AuthModel,
+        as: "agent_detail_id",
+        attributes: ["username", "actif"],
+        include: [
+          {
+            model: RoleModel,
+            as: "role_detail_id",
+            attributes: ["id", "description"],
+          },
+        ],
+      },
+    ],
+  });
 
   if (!oneAgent) {
     throw new BadRequest("Aucun agent trouvé");

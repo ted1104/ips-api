@@ -1,6 +1,6 @@
 const asyncWrapper = require("../middlewares/async");
 const { BadRequest } = require("../errors");
-const { successHandler } = require("../helpers");
+const { successHandler, attrb } = require("../helpers");
 
 const {
   RoleModel,
@@ -19,7 +19,9 @@ const {
   ####CRUD :===> ROLES ####
 */
 const getAllRole = asyncWrapper(async (req, res) => {
-  const roles = await RoleModel.findAll();
+  const roles = await RoleModel.findAll({
+    attributes: attrb.attr_statique_tables,
+  });
   return successHandler.Ok(res, roles);
 });
 
