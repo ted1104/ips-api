@@ -11,11 +11,11 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.belongsTo(models.RoleModel, {
         foreignKey: "roleId",
-        as: "role_id_detail",
+        as: "role_detail_id",
       });
       this.belongsTo(models.AgentModel, {
         foreignKey: "agentId",
-        as: "agent_id_detail",
+        as: "agent_detail_id",
       });
     }
   }

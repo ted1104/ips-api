@@ -1,6 +1,6 @@
 const asyncWrapper = require("../middlewares/async");
 const { BadRequest, Unauthenticated } = require("../errors");
-const { successHandler, bcryptHelper } = require("../helpers");
+const { successHandler, bcryptHelper, attrb } = require("../helpers");
 const { agentCreateSchemaValidation } = require("../validations");
 
 const jwt = require("jsonwebtoken");
@@ -53,7 +53,6 @@ const getAllAgents = asyncWrapper(async (req, res) => {
 
 const createAgent = asyncWrapper(async (req, res) => {
   const body = req.body;
-  console.log(body);
   const { matricule } = body;
 
   //validation
@@ -76,29 +75,64 @@ const createAgent = asyncWrapper(async (req, res) => {
     );
   }
 
-  //check if another username with the same email adress already exist
-  // const { username } = body.auth;
-  // const checkingUsername = await AuthModel.findOne({ where: { username } });
-
-  // if (checkingUsername) {
-  //   throw new BadRequest(
-  //     "un autre utilisateur avec ce même identifiant de connexion existe déjà"
-  //   );
-  // }
-
   //creating agent
   const saved = await AgentModel.create(body);
-
-  //creating authentifications info
-  // const { id: agentId } = saved;
-  // const { password } = body.auth;
-
-  //hash password before saving data auth for user
-  // const hashedPass = await bcryptHelper.myHashPassword(password);
-  // const dtAuth = { ...body.auth, password: hashedPass, agentId };
-  // await AuthModel.create(dtAuth);
 
   const msg = "L'agent a été crée avec succès";
   return successHandler.Created(res, saved, msg);
 });
-module.exports = { getAllAgents, createAgent };
+
+const getOneAgent = asyncWrapper(async (req, res) => {
+  const { id } = req.params;
+  const ids = id.split("--")[0];
+  const uuids = id.split("--")[1];
+  const oneAgent = await AgentModel.findOne({
+    where: { id: ids, uuid: uuids },
+    attributes: attrb.attr_get_one_agent,
+    include: [
+      {
+        model: CategorieProfModel,
+        as: "categorie_detail_id",
+        attributes: ["id", "description"],
+      },
+      {
+        model: FonctionModel,
+        as: "fonction_detail_id",
+        attributes: ["id", "description"],
+      },
+      {
+        model: StructureModel,
+        as: "structure_detail_id",
+        attributes: ["id", "description"],
+      },
+      {
+        model: GradeModel,
+        as: "grade_detail_id",
+        attributes: ["id", "description"],
+      },
+      {
+        model: ZoneSanteModel,
+        as: "zone_sante_detail_id",
+        attributes: ["id", "description"],
+      },
+      {
+        model: AuthModel,
+        as: "agent_detail_id",
+        attributes: ["username", "actif"],
+        include: [
+          {
+            model: RoleModel,
+            as: "role_detail_id",
+            attributes: ["id", "description"],
+          },
+        ],
+      },
+    ],
+  });
+
+  if (!oneAgent) {
+    throw new BadRequest("Aucun agent trouvé");
+  }
+  return successHandler.Ok(res, oneAgent);
+});
+module.exports = { getAllAgents, getOneAgent, createAgent };

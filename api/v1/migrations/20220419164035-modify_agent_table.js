@@ -8,9 +8,10 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    // await queryInterface.changeColumn("grades", "description", {
-    //   unique: true,
-    // });
+    await queryInterface.addColumn("agents", "uuid", {
+      type: Sequelize.UUID,
+      defaultValue: Sequelize.UUIDV4,
+    });
   },
 
   async down(queryInterface, Sequelize) {

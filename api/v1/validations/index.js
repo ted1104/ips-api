@@ -83,4 +83,29 @@ const agentCreateSchemaValidation = Joi.object().keys({
     "any.required": "la date d'engagement est obligatoire",
   }),
 });
-module.exports = { loginSchemaValidation, agentCreateSchemaValidation };
+
+const registerSchemaValidation = Joi.object().keys({
+  username: Joi.string().required().messages({
+    "string.empty": "le nom d'utilisateur est obligatoire",
+    "any.required": "le nom d'utilisateur est obligatoire",
+  }),
+  password: Joi.string().required().messages({
+    "string.empty": "le mot de passe d'utilisateur est obligatoire",
+    "any.required": "le mot de passe d'utilisateur est obligatoire",
+  }),
+  roleId: Joi.number().required().messages({
+    "number.base": "le rôle de l'utilisateur est obligatoire",
+    "number.empty": "le rôle de l'utilisateur est obligatoire",
+    "any.required": "le rôle de l'utilisateur est obligatoire",
+  }),
+  agentId: Joi.number().required().messages({
+    "number.base": "l'id de l'agent est obligatoire",
+    "number.empty": "l'id de l'agent est obligatoire",
+    "any.required": "l'id de l'agent est obligatoire",
+  }),
+});
+module.exports = {
+  loginSchemaValidation,
+  agentCreateSchemaValidation,
+  registerSchemaValidation,
+};

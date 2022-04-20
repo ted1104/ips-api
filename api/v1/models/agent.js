@@ -30,11 +30,18 @@ module.exports = (sequelize, DataTypes) => {
         as: "zone_sante_detail_id",
       });
 
-      this.hasOne(models.AuthModel, { foreignKey: "agentId" });
+      this.hasOne(models.AuthModel, {
+        foreignKey: "agentId",
+        as: "agent_detail_id",
+      });
     }
   }
   Agent.init(
     {
+      uuid: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+      },
       nom: DataTypes.STRING,
       prenom: DataTypes.STRING,
       sexe: DataTypes.INTEGER,
@@ -52,6 +59,7 @@ module.exports = (sequelize, DataTypes) => {
       primes: DataTypes.STRING,
       dob: DataTypes.DATE,
       date_engagement: DataTypes.DATE,
+      status: DataTypes.INTEGER,
     },
     {
       sequelize,
