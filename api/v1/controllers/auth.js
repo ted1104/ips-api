@@ -42,7 +42,7 @@ const login = asyncWrapper(async (req, res) => {
       },
       {
         model: RoleModel,
-        as: "role_id_detail",
+        as: "role_detail_id",
         attributes: ["id", "description"],
       },
     ],
