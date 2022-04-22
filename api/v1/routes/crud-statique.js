@@ -16,6 +16,7 @@ const {
   getZoneSante,
   createZoneSante,
   getAllStatique,
+  getStructureAndAgents,
 } = require("../controllers/crud-statique");
 
 const authMiddleware = require("../middlewares/auth");
@@ -48,5 +49,8 @@ router
   .post(authMiddleware, createZoneSante);
 
 router.route("/all-statique").get(authMiddleware, getAllStatique);
+router
+  .route("/all-agent-all-structure")
+  .get(authMiddleware, getStructureAndAgents);
 
 module.exports = router;

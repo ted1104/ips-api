@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
   Status.init(
     {
       description: DataTypes.STRING,
+      color: DataTypes.STRING,
     },
     {
       sequelize,

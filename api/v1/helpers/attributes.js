@@ -15,6 +15,19 @@ const attr_get_one_agent = [
   "date_engagement",
   "status",
 ];
-
 const attr_statique_tables = ["id", "description"];
-module.exports = { attr_get_one_agent, attr_statique_tables };
+const attr_statique_status = ["id", "description", "color"];
+const attr_missions = [
+  "id",
+  "uuid",
+  "nom",
+  "date_debut",
+  "date_create",
+  "createdAt",
+];
+module.exports = {
+  attr_get_one_agent,
+  attr_statique_tables,
+  attr_missions,
+  attr_statique_status,
+};

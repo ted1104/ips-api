@@ -1,6 +1,6 @@
 const asyncWrapper = require("../middlewares/async");
 const { BadRequest } = require("../errors");
-const { successHandler, uploaderFile } = require("../helpers/");
+const { successHandler, uploaderFile, attrb } = require("../helpers/");
 const {
   missionSchemaValidation,
   fichierMissionSchemaValidation,
@@ -19,10 +19,27 @@ const {
   MissionsModel,
   MissionsParticipantsModel,
   MissionsFichiersModel,
+  StatusModel,
 } = require("../models");
 
-const getAllMissions = asyncWrapper((req, res) => {
-  return successHandler.Ok(res, []);
+const getAllMissions = asyncWrapper(async (req, res) => {
+  const data = await MissionsModel.findAll({
+    order: [["createdAt", "DESC"]],
+    include: [
+      {
+        model: StatusModel,
+        as: "status_detail_id",
+        attributes: attrb.attr_statique_status,
+      },
+      {
+        model: StructureModel,
+        as: "structure_detail_mission_id",
+        attributes: attrb.attr_statique_tables,
+      },
+    ],
+    attributes: attrb.attr_missions,
+  });
+  return successHandler.Ok(res, data);
 });
 
 const createMission = asyncWrapper(async (req, res) => {
@@ -74,6 +91,8 @@ const createMissionFiles = asyncWrapper(async (req, res) => {
   };
   const path = await uploaderFile(file, msgs);
   const { src, name } = path;
+
+  //save data
 
   const data_to_save = { ...body, path: src, name_fichier: name };
   const savedFile = await MissionsFichiersModel.create(data_to_save);

@@ -10,6 +10,7 @@ const {
   StructureModel,
   ZoneSanteModel,
   AuthModel,
+  AgentModel,
 } = require("../models");
 
 /* 
@@ -175,26 +176,45 @@ const createZoneSante = asyncWrapper(async (req, res) => {
 */
 
 const getAllStatique = asyncWrapper(async (req, res) => {
-  const roles = await RoleModel.findAll({ attributes: ["id", "description"] });
+  const roles = await RoleModel.findAll({
+    attributes: attrb.attr_statique_tables,
+  });
   const grades = await GradeModel.findAll({
-    attributes: ["id", "description"],
+    attributes: attrb.attr_statique_tables,
   });
   const fonction = await FonctionModel.findAll({
-    attributes: ["id", "description"],
+    attributes: attrb.attr_statique_tables,
   });
   const categorie = await CategorieProfModel.findAll({
-    attributes: ["id", "description"],
+    attributes: attrb.attr_statique_tables,
   });
   const structure = await StructureModel.findAll({
-    attributes: ["id", "description"],
+    attributes: attrb.attr_statique_tables,
   });
   const zonesante = await ZoneSanteModel.findAll({
-    attributes: ["id", "description"],
+    attributes: attrb.attr_statique_tables,
   });
 
   const data = { roles, grades, fonction, categorie, structure, zonesante };
   return successHandler.Ok(res, data);
 });
+
+/* 
+  #########################
+  #########################
+  #########################
+  ### GET ALL STRUCTURE && AGENT ###
+*/
+
+const getStructureAndAgents = async (req, res) => {
+  const agent = await AgentModel.findAll({
+    attributes: ["id", "nom", "prenom"],
+  });
+  const structure = await StructureModel.findAll({
+    attributes: attrb.attr_statique_tables,
+  });
+  return successHandler.Ok(res, { agent, structure });
+};
 module.exports = {
   getAllRole,
   getOneRole,
@@ -210,4 +230,5 @@ module.exports = {
   getZoneSante,
   createZoneSante,
   getAllStatique,
+  getStructureAndAgents,
 };

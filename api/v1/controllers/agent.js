@@ -23,27 +23,27 @@ const getAllAgents = asyncWrapper(async (req, res) => {
       {
         model: CategorieProfModel,
         as: "categorie_detail_id",
-        attributes: ["id", "description"],
+        attributes: attrb.attr_statique_tables,
       },
       {
         model: FonctionModel,
         as: "fonction_detail_id",
-        attributes: ["id", "description"],
+        attributes: attrb.attr_statique_tables,
       },
       {
         model: StructureModel,
         as: "structure_detail_id",
-        attributes: ["id", "description"],
+        attributes: attrb.attr_statique_tables,
       },
       {
         model: GradeModel,
         as: "grade_detail_id",
-        attributes: ["id", "description"],
+        attributes: attrb.attr_statique_tables,
       },
       {
         model: ZoneSanteModel,
         as: "zone_sante_detail_id",
-        attributes: ["id", "description"],
+        attributes: attrb.attr_statique_tables,
       },
     ],
   });
