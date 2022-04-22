@@ -18,7 +18,6 @@ const {
 } = require("../models");
 
 const getAllAgents = asyncWrapper(async (req, res) => {
-  console.log(req.user);
   const data = await AgentModel.findAll({
     include: [
       {

@@ -11,6 +11,7 @@ const notFoundPage = require(`./api/${process.env.VERSION}/middlewares/not-found
 //all routes exports
 const routesCrudStatique = require(`./api/${process.env.VERSION}/routes/crud-statique`);
 const routeAgents = require(`./api/${process.env.VERSION}/routes/agent`);
+const routeMissions = require(`./api/${process.env.VERSION}/routes/mission`);
 const routeAuth = require(`./api/${process.env.VERSION}/routes/auth`);
 
 //middlewares
@@ -19,6 +20,7 @@ app.use(cors());
 
 app.use(`/api/${process.env.VERSION}`, routesCrudStatique);
 app.use(`/api/${process.env.VERSION}/agent`, routeAgents);
+app.use(`/api/${process.env.VERSION}/mission`, routeMissions);
 app.use(`/api/${process.env.VERSION}/auth`, routeAuth);
 app.use(notFoundPage);
 app.use(errorHandler);

@@ -104,8 +104,47 @@ const registerSchemaValidation = Joi.object().keys({
     "any.required": "l'id de l'agent est obligatoire",
   }),
 });
+
+const missionSchemaValidation = Joi.object().keys({
+  nom: Joi.string().required().messages({
+    "string.empty": "le nom de la mission est obligatoire",
+    "any.required": "le nom de la mission est obligatoire",
+  }),
+  agents: Joi.array()
+    .required()
+    .items(
+      Joi.object()
+        .required()
+        .keys({
+          agentId: Joi.number().required().messages({
+            "number.base":
+              "un ou plusieurs participants à la mission sont obligatoire",
+            "number.empty":
+              "un ou plusieurs participants à la mission sont obligatoire",
+            "any.required": "les participants à la mission sont obligatoire",
+          }),
+        })
+    )
+    .messages({
+      "array.base":
+        "un ou plusieurs participants à la mission sont obligatoire",
+      "array.includesRequiredUnknowns":
+        "un ou plusieurs participants à la mission sont obligatoire",
+      "any.required":
+        "un ou plusieurs participants à la mission sont obligatoire",
+    }),
+  date_debut: Joi.date().required().messages({
+    "date.base": "la date du debut de la mission est obligatoire",
+    "any.required": "la date du debut de la mission est obligatoire",
+  }),
+  structureId: Joi.number().required().messages({
+    "number.base": "cette mission doit être affecté à une structure",
+    "any.required": "cette mission doit être affecté à une structure",
+  }),
+});
 module.exports = {
   loginSchemaValidation,
   agentCreateSchemaValidation,
   registerSchemaValidation,
+  missionSchemaValidation,
 };

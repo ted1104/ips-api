@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       });
       this.belongsTo(models.MissionsModel, {
         foreignKey: "missionId",
-        as: "mission_detail_id",
+        as: "mission_fichier_detail_id",
       });
     }
   }
