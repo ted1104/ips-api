@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       missionId: DataTypes.INTEGER,
       typefichierId: DataTypes.INTEGER,
       path: DataTypes.STRING,
+      name_fichier: DataTypes.STRING,
     },
     {
       sequelize,

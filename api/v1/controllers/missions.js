@@ -1,7 +1,10 @@
 const asyncWrapper = require("../middlewares/async");
 const { BadRequest } = require("../errors");
-const { successHandler } = require("../helpers/");
-const { missionSchemaValidation } = require("../validations");
+const { successHandler, uploaderFile } = require("../helpers/");
+const {
+  missionSchemaValidation,
+  fichierMissionSchemaValidation,
+} = require("../validations");
 
 //models
 const {
@@ -15,6 +18,7 @@ const {
   AuthModel,
   MissionsModel,
   MissionsParticipantsModel,
+  MissionsFichiersModel,
 } = require("../models");
 
 const getAllMissions = asyncWrapper((req, res) => {
@@ -52,4 +56,30 @@ const createMission = asyncWrapper(async (req, res) => {
   return successHandler.Created(res, savedMission, msg);
 });
 
-module.exports = { getAllMissions, createMission };
+const createMissionFiles = asyncWrapper(async (req, res) => {
+  const body = req.body;
+
+  //validation
+  const validation = fichierMissionSchemaValidation.validate(body);
+  const { value, error } = validation;
+
+  if (error) {
+    throw new BadRequest(error.details[0].message);
+  }
+  const file = req.files;
+  //uploads files config
+  const msgs = {
+    noFile: "un ou plusieurs fichiers sont obligatoires",
+    invalideFile: "Svp charger envoyer un fichier valide, un pdf est requis",
+  };
+  const path = await uploaderFile(file, msgs);
+  const { src, name } = path;
+
+  const data_to_save = { ...body, path: src, name_fichier: name };
+  const savedFile = await MissionsFichiersModel.create(data_to_save);
+
+  const msg = "les fichiers liés à cette missions ont été bien enregistrés";
+  return successHandler.Created(res, savedFile, msg);
+});
+
+module.exports = { getAllMissions, createMission, createMissionFiles };

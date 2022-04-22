@@ -142,9 +142,23 @@ const missionSchemaValidation = Joi.object().keys({
     "any.required": "cette mission doit être affecté à une structure",
   }),
 });
+
+const fichierMissionSchemaValidation = Joi.object().keys({
+  missionId: Joi.number().required().messages({
+    "number.base": "Veuillez selectionner une mission",
+    "any.required": "Veuillez selectionner une mission",
+  }),
+  typefichierId: Joi.number().required().messages({
+    "number.base": "le type de fichier est obligatoire",
+    "any.required": "le type de fichier est obligatoire",
+  }),
+});
+
+// const uploadfilesMissionValidation = Joi.f
 module.exports = {
   loginSchemaValidation,
   agentCreateSchemaValidation,
   registerSchemaValidation,
   missionSchemaValidation,
+  fichierMissionSchemaValidation,
 };

@@ -4,6 +4,7 @@ require("dotenv").config();
 require("express-async-errors");
 
 const cors = require("cors");
+const fileUpload = require("express-fileupload");
 
 const errorHandler = require(`./api/${process.env.VERSION}/middlewares/error-handler`);
 const notFoundPage = require(`./api/${process.env.VERSION}/middlewares/not-found-page`);
@@ -16,6 +17,7 @@ const routeAuth = require(`./api/${process.env.VERSION}/routes/auth`);
 
 //middlewares
 app.use(express.json());
+app.use(fileUpload({ useTempFiles: true }));
 app.use(cors());
 
 app.use(`/api/${process.env.VERSION}`, routesCrudStatique);

@@ -28,7 +28,7 @@ const uploaderFile = async (file, msg) => {
   const imagePath = path.join(pathMain, `${newName}`);
   await fichierToUpload.mv(imagePath);
 
-  return process.env.PATH_TO_SAVE + newName;
+  return { src: process.env.PATH_TO_SAVE + newName, name: orignalName };
 };
 
 module.exports = uploaderFile;
