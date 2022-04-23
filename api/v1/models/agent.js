@@ -39,6 +39,14 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "agentId",
         as: "mission_participant_id",
       });
+
+      this.belongsToMany(models.MissionsParticipantsModel, {
+        through: "agentId",
+      });
+      this.hasMany(models.MissionsParticipantsModel, {
+        foreignKey: "agentId",
+        as: "agent_participant_detail_id",
+      });
     }
   }
   Agent.init(

@@ -152,6 +152,10 @@ const fichierMissionSchemaValidation = Joi.object().keys({
     "number.base": "le type de fichier est obligatoire",
     "any.required": "le type de fichier est obligatoire",
   }),
+  name_fichier: Joi.string().required().messages({
+    "string.empty": "le nom du fichier est obligatoire",
+    "any.required": "le nom du fichier est obligatoire",
+  }),
 });
 
 // const uploadfilesMissionValidation = Joi.f

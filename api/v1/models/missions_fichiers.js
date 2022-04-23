@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.belongsTo(models.TypeFichierModel, {
         foreignKey: "typefichierId",
-        as: "type_fichier_detail_id",
+        as: "type_fichier_detail",
       });
       this.belongsTo(models.MissionsModel, {
         foreignKey: "missionId",

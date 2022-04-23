@@ -1,6 +1,6 @@
 const asyncWrapper = require("../middlewares/async");
 const { BadRequest, Unauthenticated } = require("../errors");
-const { successHandler, bcryptHelper, attrb } = require("../helpers");
+const { successHandler, bcryptHelper, attrb, splitid } = require("../helpers");
 const { agentCreateSchemaValidation } = require("../validations");
 
 const jwt = require("jsonwebtoken");
@@ -83,8 +83,7 @@ const createAgent = asyncWrapper(async (req, res) => {
 
 const getOneAgent = asyncWrapper(async (req, res) => {
   const { id } = req.params;
-  const ids = id.split("--")[0];
-  const uuids = id.split("--")[1];
+  const { ids, uuids } = splitid(id);
   const oneAgent = await AgentModel.findOne({
     where: { id: ids, uuid: uuids },
     attributes: attrb.attr_get_one_agent,

@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.hasMany(models.MissionsFichiersModel, {
         foreignKey: "typefichierId",
-        as: "type_fichier_detail_id",
+        as: "type_fichier_detail",
       });
     }
   }

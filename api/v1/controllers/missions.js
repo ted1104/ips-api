@@ -1,6 +1,6 @@
 const asyncWrapper = require("../middlewares/async");
 const { BadRequest } = require("../errors");
-const { successHandler, uploaderFile, attrb } = require("../helpers/");
+const { successHandler, uploaderFile, attrb, splitid } = require("../helpers/");
 const {
   missionSchemaValidation,
   fichierMissionSchemaValidation,
@@ -20,6 +20,7 @@ const {
   MissionsParticipantsModel,
   MissionsFichiersModel,
   StatusModel,
+  TypeFichierModel,
 } = require("../models");
 
 const getAllMissions = asyncWrapper(async (req, res) => {
@@ -39,6 +40,67 @@ const getAllMissions = asyncWrapper(async (req, res) => {
     ],
     attributes: attrb.attr_missions,
   });
+  return successHandler.Ok(res, data);
+});
+
+const getOneMission = asyncWrapper(async (req, res) => {
+  const { id } = req.params;
+  const { ids, uuids } = splitid(id);
+  const getOne = await MissionsModel.findAll({
+    where: { id: ids, uuid: uuids },
+    attributes: attrb.attr_missions,
+    include: [
+      {
+        model: StatusModel,
+        as: "status_detail_id",
+        attributes: attrb.attr_statique_status,
+      },
+      {
+        model: StructureModel,
+        as: "structure_detail_mission_id",
+        attributes: attrb.attr_statique_tables,
+      },
+      {
+        model: MissionsParticipantsModel,
+        as: "missions_participant_detail_id",
+        attributes: ["id"],
+        include: {
+          model: AgentModel,
+          as: "agent_participant_detail_id",
+          attributes: [
+            "id",
+            "uuid",
+            "nom",
+            "prenom",
+            "matricule",
+            "niveau_etudes",
+          ],
+        },
+      },
+    ],
+  });
+
+  const gettypefichier = await TypeFichierModel.findAll({
+    attributes: attrb.attr_statique_tables,
+    include: {
+      model: MissionsFichiersModel,
+      as: "type_fichier_detail",
+      attributes: ["id", "path", "name_fichier"],
+      where: {
+        missionId: ids,
+      },
+      required: false,
+    },
+  });
+
+  if (!getOne) {
+    throw new BadRequest("Aucune mission trouvée");
+  }
+
+  const data = {
+    mission: getOne,
+    fichiers: gettypefichier,
+  };
   return successHandler.Ok(res, data);
 });
 
@@ -75,9 +137,14 @@ const createMission = asyncWrapper(async (req, res) => {
 
 const createMissionFiles = asyncWrapper(async (req, res) => {
   const body = req.body;
+  const tovalidate = {
+    missionId: body.missionId,
+    typefichierId: body.typefichierId,
+    name_fichier: body.name_fichier,
+  };
 
   //validation
-  const validation = fichierMissionSchemaValidation.validate(body);
+  const validation = fichierMissionSchemaValidation.validate(tovalidate);
   const { value, error } = validation;
 
   if (error) {
@@ -86,7 +153,7 @@ const createMissionFiles = asyncWrapper(async (req, res) => {
   const file = req.files;
   //uploads files config
   const msgs = {
-    noFile: "un ou plusieurs fichiers sont obligatoires",
+    noFile: "le fichier est obligatoire",
     invalideFile: "Svp charger envoyer un fichier valide, un pdf est requis",
   };
   const path = await uploaderFile(file, msgs);
@@ -94,11 +161,16 @@ const createMissionFiles = asyncWrapper(async (req, res) => {
 
   //save data
 
-  const data_to_save = { ...body, path: src, name_fichier: name };
+  const data_to_save = { ...body, path: src };
   const savedFile = await MissionsFichiersModel.create(data_to_save);
 
-  const msg = "les fichiers liés à cette missions ont été bien enregistrés";
+  const msg = "le fichier lié à cette mission a été bien enregistré";
   return successHandler.Created(res, savedFile, msg);
 });
 
-module.exports = { getAllMissions, createMission, createMissionFiles };
+module.exports = {
+  getAllMissions,
+  createMission,
+  createMissionFiles,
+  getOneMission,
+};

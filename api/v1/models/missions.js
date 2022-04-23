@@ -21,6 +21,13 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "missionId",
         as: "mission_fichier_detail_id",
       });
+      // this.belongsToMany(models.MissionsParticipantsModel, {
+      //   through: "missions",
+      // });
+      this.hasMany(models.MissionsParticipantsModel, {
+        foreignKey: "missionId",
+        as: "missions_participant_detail_id",
+      });
     }
   }
   Missions.init(
