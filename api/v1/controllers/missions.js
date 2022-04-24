@@ -25,7 +25,6 @@ const {
   StatusModel,
   TypeFichierModel,
 } = require("../models");
-const { object } = require("joi");
 
 const getAllMissions = asyncWrapper(async (req, res) => {
   //analyse de filtre
@@ -70,7 +69,6 @@ const getAllMissions = asyncWrapper(async (req, res) => {
         [Op.startsWith]: date,
       },
     };
-    // console.log("aucun filtre appliquer ", date);
   }
 
   const data = await MissionsModel.findAll({
@@ -132,6 +130,9 @@ const getOneMission = asyncWrapper(async (req, res) => {
 
   const gettypefichier = await TypeFichierModel.findAll({
     attributes: attrb.attr_statique_tables,
+    where: {
+      pour: 1,
+    },
     include: {
       model: MissionsFichiersModel,
       as: "type_fichier_detail",
@@ -203,7 +204,7 @@ const createMissionFiles = asyncWrapper(async (req, res) => {
   const file = req.files;
   //uploads files config
   const msgs = {
-    noFile: "le fichier est obligatoire",
+    noFile: "le fichier lié à la reunion est obligatoire",
     invalideFile: "Svp charger envoyer un fichier valide, un pdf est requis",
   };
   const path = await uploaderFile(file, msgs);

@@ -168,6 +168,40 @@ const filterIntervalSchemaValidation = Joi.object().keys({
     "any.required": "la date de la fin du filtre est obligatoire",
   }),
 });
+const reunionSchemaValidation = Joi.object().keys({
+  titre: Joi.string().required().messages({
+    "string.base": "le titre de la reunion est obligatoire",
+    "string.empty": "le titre de la reunion est obligatoire",
+    "any.required": "le titre de la reunion est obligatoire",
+  }),
+  date_reunion: Joi.date().required().messages({
+    "date.base": "la date de la reunion est obligatoire",
+    "any.required": "la date de la reunion est obligatoire",
+  }),
+  date_adoption: Joi.date().required().messages({
+    "date.base": "la date de l'adoption la reunion est obligatoire",
+    "any.required": "la date de l'adoption la reunion est obligatoire",
+  }),
+  created_by: Joi.number().required().messages({
+    "number.base": "il semblerait que votre session est deja expiré",
+    "any.required": "il semblerait que votre session est deja expiré",
+  }),
+});
+
+const fichierReunionSchemaValidation = Joi.object().keys({
+  reunionId: Joi.number().required().messages({
+    "number.base": "Veuillez selectionner une reunion",
+    "any.required": "Veuillez selectionner une reunion",
+  }),
+  typefichierId: Joi.number().required().messages({
+    "number.base": "le type de fichier est obligatoire",
+    "any.required": "le type de fichier est obligatoire",
+  }),
+  name_fichier: Joi.string().required().messages({
+    "string.empty": "le nom du fichier est obligatoire",
+    "any.required": "le nom du fichier est obligatoire",
+  }),
+});
 
 // const uploadfilesMissionValidation = Joi.f
 module.exports = {
@@ -177,4 +211,6 @@ module.exports = {
   missionSchemaValidation,
   fichierMissionSchemaValidation,
   filterIntervalSchemaValidation,
+  reunionSchemaValidation,
+  fichierReunionSchemaValidation,
 };

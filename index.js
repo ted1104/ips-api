@@ -13,6 +13,7 @@ const notFoundPage = require(`./api/${process.env.VERSION}/middlewares/not-found
 const routesCrudStatique = require(`./api/${process.env.VERSION}/routes/crud-statique`);
 const routeAgents = require(`./api/${process.env.VERSION}/routes/agent`);
 const routeMissions = require(`./api/${process.env.VERSION}/routes/mission`);
+const routeReunions = require(`./api/${process.env.VERSION}/routes/reunion`);
 const routeAuth = require(`./api/${process.env.VERSION}/routes/auth`);
 
 //middlewares
@@ -24,6 +25,7 @@ app.use(express.static("./public"));
 app.use(`/api/${process.env.VERSION}`, routesCrudStatique);
 app.use(`/api/${process.env.VERSION}/agent`, routeAgents);
 app.use(`/api/${process.env.VERSION}/mission`, routeMissions);
+app.use(`/api/${process.env.VERSION}/reunion`, routeReunions);
 app.use(`/api/${process.env.VERSION}/auth`, routeAuth);
 app.use(notFoundPage);
 app.use(errorHandler);
