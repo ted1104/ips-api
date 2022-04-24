@@ -158,6 +158,17 @@ const fichierMissionSchemaValidation = Joi.object().keys({
   }),
 });
 
+const filterIntervalSchemaValidation = Joi.object().keys({
+  date_debut: Joi.date().required().messages({
+    "date.base": "la date du debut du filtre est obligatoire",
+    "any.required": "la date du debut du filtre est obligatoire",
+  }),
+  date_fin: Joi.date().required().messages({
+    "date.base": "la date de la fin du filtre est obligatoire",
+    "any.required": "la date de la fin du filtre est obligatoire",
+  }),
+});
+
 // const uploadfilesMissionValidation = Joi.f
 module.exports = {
   loginSchemaValidation,
@@ -165,4 +176,5 @@ module.exports = {
   registerSchemaValidation,
   missionSchemaValidation,
   fichierMissionSchemaValidation,
+  filterIntervalSchemaValidation,
 };

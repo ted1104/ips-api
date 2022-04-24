@@ -1,9 +1,12 @@
+const { Op } = require("sequelize");
+
 const asyncWrapper = require("../middlewares/async");
 const { BadRequest } = require("../errors");
 const { successHandler, uploaderFile, attrb, splitid } = require("../helpers/");
 const {
   missionSchemaValidation,
   fichierMissionSchemaValidation,
+  filterIntervalSchemaValidation,
 } = require("../validations");
 
 //models
@@ -26,12 +29,30 @@ const {
 const getAllMissions = asyncWrapper(async (req, res) => {
   //analyse de filtre
   //1. filtre de status
-  const { status } = req.query;
+  const { status, date_debut, date_fin } = req.query;
   let whereClause = {};
   if (status && status > 0) {
     whereClause = {
       ...whereClause,
       statusId: status,
+    };
+  }
+
+  //2. filtre en fonction de date
+  if (date_debut && date_fin) {
+    const validation = filterIntervalSchemaValidation.validate({
+      date_debut,
+      date_fin,
+    });
+    const { error, value } = validation;
+    if (error) {
+      return BadRequest(error.details[0].message);
+    }
+    whereClause = {
+      ...whereClause,
+      date_create: {
+        [Op.between]: [date_debut, date_fin],
+      },
     };
   }
 
