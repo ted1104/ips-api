@@ -31,7 +31,13 @@ const {
 } = require("../models");
 
 const getAllReunions = asyncWrapper(async (req, res) => {
-  const data = await ReunionsModel.findAll();
+  const data = await ReunionsModel.findAll({
+    include: {
+      model: AgentModel,
+      as: "user_create",
+      attributes: ["id", "nom", "prenom"],
+    },
+  });
   return successHandler.Ok(res, data);
 });
 
@@ -39,7 +45,13 @@ const getOneReunions = asyncWrapper(async (req, res) => {
   const { id } = req.params;
   const { ids, uuids } = splitid(id);
   const getOne = await ReunionsModel.findAll({
+    attributes: ["id", "uuid", "titre", "date_reunion", "date_adoption"],
     where: { id: ids, uuid: uuids },
+    include: {
+      model: AgentModel,
+      as: "user_create",
+      attributes: ["id", "nom", "prenom"],
+    },
   });
 
   const gettypefichier = await TypeFichierModel.findAll({

@@ -47,6 +47,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "agentId",
         as: "agent_participant_detail_id",
       });
+
+      this.hasMany(models.ReunionsModel, {
+        foreignKey: "created_by",
+        as: "user_create",
+      });
     }
   }
   Agent.init(

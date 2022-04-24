@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "reunionId",
         as: "reunions_fichier_detail",
       });
+      this.belongsTo(models.AgentModel, {
+        foreignKey: "created_by",
+        as: "user_create",
+      });
     }
   }
   Reunions.init(
