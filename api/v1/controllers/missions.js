@@ -25,6 +25,7 @@ const {
   StatusModel,
   TypeFichierModel,
 } = require("../models");
+const { object } = require("joi");
 
 const getAllMissions = asyncWrapper(async (req, res) => {
   //analyse de filtre
@@ -54,6 +55,22 @@ const getAllMissions = asyncWrapper(async (req, res) => {
         [Op.between]: [date_debut, date_fin],
       },
     };
+  }
+
+  //3. all mission en fonction du mois encours
+  if (Object.keys(whereClause).length < 1) {
+    const today = new Date();
+    const date = `${today.getFullYear()}-${
+      today.getMonth() + 1 < 10
+        ? `0${today.getMonth() + 1}`
+        : today.getMonth() + 1
+    }`;
+    whereClause = {
+      date_create: {
+        [Op.startsWith]: date,
+      },
+    };
+    // console.log("aucun filtre appliquer ", date);
   }
 
   const data = await MissionsModel.findAll({
