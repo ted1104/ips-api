@@ -24,6 +24,17 @@ const {
 } = require("../models");
 
 const getAllMissions = asyncWrapper(async (req, res) => {
+  //analyse de filtre
+  //1. filtre de status
+  const { status } = req.query;
+  let whereClause = {};
+  if (status && status > 0) {
+    whereClause = {
+      ...whereClause,
+      statusId: status,
+    };
+  }
+
   const data = await MissionsModel.findAll({
     order: [["createdAt", "DESC"]],
     include: [
@@ -39,6 +50,7 @@ const getAllMissions = asyncWrapper(async (req, res) => {
       },
     ],
     attributes: attrb.attr_missions,
+    where: whereClause,
   });
   return successHandler.Ok(res, data);
 });

@@ -19,6 +19,7 @@ const routeAuth = require(`./api/${process.env.VERSION}/routes/auth`);
 app.use(express.json());
 app.use(fileUpload({ useTempFiles: true }));
 app.use(cors());
+app.use(express.static("./public"));
 
 app.use(`/api/${process.env.VERSION}`, routesCrudStatique);
 app.use(`/api/${process.env.VERSION}/agent`, routeAgents);
