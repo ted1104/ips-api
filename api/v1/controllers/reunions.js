@@ -2,7 +2,13 @@ const { Op } = require("sequelize");
 
 const asyncWrapper = require("../middlewares/async");
 const { BadRequest } = require("../errors");
-const { successHandler, uploaderFile, attrb, splitid } = require("../helpers/");
+const {
+  successHandler,
+  uploaderFile,
+  attrb,
+  splitid,
+  filterRequest,
+} = require("../helpers/");
 const {
   missionSchemaValidation,
   fichierMissionSchemaValidation,
@@ -28,15 +34,29 @@ const {
   TypeFichierModel,
   ReunionsModel,
   ReunionsFichiersModel,
+  TypeReunionsModel,
 } = require("../models");
 
 const getAllReunions = asyncWrapper(async (req, res) => {
+  //filtrer
+  const condition_filter = filterRequest.reunions(req.query);
+
   const data = await ReunionsModel.findAll({
-    include: {
-      model: AgentModel,
-      as: "user_create",
-      attributes: ["id", "nom", "prenom"],
-    },
+    order: [["createdAt", "DESC"]],
+    attributes: ["id", "uuid", "titre", "date_reunion", "date_adoption"],
+    include: [
+      {
+        model: AgentModel,
+        as: "user_create",
+        attributes: ["id", "nom", "prenom"],
+      },
+      {
+        model: TypeReunionsModel,
+        as: "type_reunion_detail_id",
+        attributes: ["id", "description"],
+      },
+    ],
+    where: condition_filter,
   });
   return successHandler.Ok(res, data);
 });
@@ -47,11 +67,18 @@ const getOneReunions = asyncWrapper(async (req, res) => {
   const getOne = await ReunionsModel.findAll({
     attributes: ["id", "uuid", "titre", "date_reunion", "date_adoption"],
     where: { id: ids, uuid: uuids },
-    include: {
-      model: AgentModel,
-      as: "user_create",
-      attributes: ["id", "nom", "prenom"],
-    },
+    include: [
+      {
+        model: AgentModel,
+        as: "user_create",
+        attributes: ["id", "nom", "prenom"],
+      },
+      {
+        model: TypeReunionsModel,
+        as: "type_reunion_detail_id",
+        attributes: ["id", "description"],
+      },
+    ],
   });
 
   const gettypefichier = await TypeFichierModel.findAll({
@@ -70,8 +97,8 @@ const getOneReunions = asyncWrapper(async (req, res) => {
     },
   });
 
-  if (!getOne) {
-    throw new BadRequest("Aucune mission trouvée");
+  if (getOne.length < 1) {
+    throw new BadRequest("Aucune reunion trouvée");
   }
   const data = {
     reunion: getOne,

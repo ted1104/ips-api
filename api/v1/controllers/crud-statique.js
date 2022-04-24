@@ -11,6 +11,7 @@ const {
   ZoneSanteModel,
   AuthModel,
   AgentModel,
+  TypeReunionsModel,
 } = require("../models");
 
 /* 
@@ -172,6 +173,29 @@ const createZoneSante = asyncWrapper(async (req, res) => {
   #########################
   #########################
   #########################
+  ### CRUD :===> TYPE REUNION ###
+*/
+
+const getTypeReunion = asyncWrapper(async (req, res) => {
+  const data = await TypeReunionsModel.findAll();
+  return successHandler.Ok(res, data);
+});
+
+const createTypeReunion = asyncWrapper(async (req, res) => {
+  const body = req.body;
+  const checkIfExist = await TypeReunionsModel.findOne({ where: body });
+  if (checkIfExist) {
+    throw new BadRequest("ce type de reunion existe déjà");
+  }
+  const data = await TypeReunionsModel.create(body);
+  const msg = "Le type de reunion a été créée avec succès";
+  return successHandler.Created(res, data, msg);
+});
+
+/* 
+  #########################
+  #########################
+  #########################
   ### GET ALL STATIQUE TABLES ###
 */
 
@@ -231,4 +255,6 @@ module.exports = {
   createZoneSante,
   getAllStatique,
   getStructureAndAgents,
+  getTypeReunion,
+  createTypeReunion,
 };

@@ -174,6 +174,10 @@ const reunionSchemaValidation = Joi.object().keys({
     "string.empty": "le titre de la reunion est obligatoire",
     "any.required": "le titre de la reunion est obligatoire",
   }),
+  typeReunionId: Joi.number().required().messages({
+    "number.base": "Veuillez selectionner le type de la reunion",
+    "any.required": "Veuillez selectionner le type de la reunion",
+  }),
   date_reunion: Joi.date().required().messages({
     "date.base": "la date de la reunion est obligatoire",
     "any.required": "la date de la reunion est obligatoire",

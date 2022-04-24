@@ -1,8 +1,12 @@
-const { Op } = require("sequelize");
-
 const asyncWrapper = require("../middlewares/async");
 const { BadRequest } = require("../errors");
-const { successHandler, uploaderFile, attrb, splitid } = require("../helpers/");
+const {
+  successHandler,
+  uploaderFile,
+  attrb,
+  splitid,
+  filterRequest,
+} = require("../helpers/");
 const {
   missionSchemaValidation,
   fichierMissionSchemaValidation,
@@ -28,48 +32,7 @@ const {
 
 const getAllMissions = asyncWrapper(async (req, res) => {
   //analyse de filtre
-  //1. filtre de status
-  const { status, date_debut, date_fin } = req.query;
-  let whereClause = {};
-  if (status && status > 0) {
-    whereClause = {
-      ...whereClause,
-      statusId: status,
-    };
-  }
-
-  //2. filtre en fonction de date
-  if (date_debut && date_fin) {
-    const validation = filterIntervalSchemaValidation.validate({
-      date_debut,
-      date_fin,
-    });
-    const { error, value } = validation;
-    if (error) {
-      return BadRequest(error.details[0].message);
-    }
-    whereClause = {
-      ...whereClause,
-      date_create: {
-        [Op.between]: [date_debut, date_fin],
-      },
-    };
-  }
-
-  //3. all mission en fonction du mois encours
-  if (Object.keys(whereClause).length < 1) {
-    const today = new Date();
-    const date = `${today.getFullYear()}-${
-      today.getMonth() + 1 < 10
-        ? `0${today.getMonth() + 1}`
-        : today.getMonth() + 1
-    }`;
-    whereClause = {
-      date_create: {
-        [Op.startsWith]: date,
-      },
-    };
-  }
+  const condition_filter = filterRequest.mission(req.query);
 
   const data = await MissionsModel.findAll({
     order: [["createdAt", "DESC"]],
@@ -86,7 +49,7 @@ const getAllMissions = asyncWrapper(async (req, res) => {
       },
     ],
     attributes: attrb.attr_missions,
-    where: whereClause,
+    where: condition_filter,
   });
   return successHandler.Ok(res, data);
 });
@@ -144,7 +107,7 @@ const getOneMission = asyncWrapper(async (req, res) => {
     },
   });
 
-  if (!getOne) {
+  if (getOne.length < 1) {
     throw new BadRequest("Aucune mission trouvée");
   }
 

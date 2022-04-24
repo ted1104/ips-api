@@ -17,6 +17,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "created_by",
         as: "user_create",
       });
+
+      this.belongsTo(models.TypeReunionsModel, {
+        foreignKey: "typeReunionId",
+        as: "type_reunion_detail_id",
+      });
     }
   }
   Reunions.init(
@@ -29,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       date_reunion: DataTypes.STRING,
       date_adoption: DataTypes.DATE,
       created_by: DataTypes.INTEGER,
+      typeReunionId: DataTypes.INTEGER,
     },
     {
       sequelize,
