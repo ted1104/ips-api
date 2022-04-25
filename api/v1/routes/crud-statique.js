@@ -19,6 +19,8 @@ const {
   getStructureAndAgents,
   getTypeReunion,
   createTypeReunion,
+  getAllPartenaire,
+  createPartenaire,
 } = require("../controllers/crud-statique");
 
 const authMiddleware = require("../middlewares/auth");
@@ -59,5 +61,10 @@ router
   .route("/type-reunion")
   .get(authMiddleware, getTypeReunion)
   .post(authMiddleware, createTypeReunion);
+
+router
+  .route("/partenaire")
+  .get(authMiddleware, getAllPartenaire)
+  .post(authMiddleware, createPartenaire);
 
 module.exports = router;

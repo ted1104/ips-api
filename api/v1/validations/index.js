@@ -207,6 +207,46 @@ const fichierReunionSchemaValidation = Joi.object().keys({
   }),
 });
 
+const statiqueTableSchemaValidation = Joi.object().keys({
+  description: Joi.string().required().messages({
+    "string.empty": "la description est obligatoire",
+    "any.required": "la description est obligatoire",
+  }),
+});
+
+const operationBanqueSchemaValidation = Joi.object().keys({
+  typeOperationId: Joi.number().required().messages({
+    "number.base": "le type de l'operation est obligatoire",
+    "any.required": "le type de l'operation est obligatoire",
+  }),
+  partenaireId: Joi.number().required().messages({
+    "number.base": "le partenaire est obligatoire",
+    "any.required": "le partenaire est obligatoire",
+  }),
+  montant: Joi.number().required().messages({
+    "number.base": "le montant est obligatoire",
+    "any.required": "le montant est obligatoire",
+  }),
+  motif: Joi.string().required().messages({
+    "string.empty": "la motif de l'operation est obligatoire",
+    "any.required": "la motif de l'operation obligatoire",
+  }),
+});
+
+const ligneBudgetaireSchemaValidation = Joi.object().keys({
+  description: Joi.string().required().messages({
+    "string.empty": "la description de la ligne budgetaire est obligatoire",
+    "any.required": "la description de la ligne budgetaire est obligatoire",
+  }),
+  montant: Joi.number().required().messages({
+    "number.base": "le montant loué à cette ligne budgetaire est obligatoire",
+    "any.required": "le montant loué à cette ligne budgetaire est obligatoire",
+  }),
+  partenaireId: Joi.number().required().messages({
+    "number.base": "le partenaire est obligatoire",
+    "any.required": "le partenaire est obligatoire",
+  }),
+});
 // const uploadfilesMissionValidation = Joi.f
 module.exports = {
   loginSchemaValidation,
@@ -217,4 +257,7 @@ module.exports = {
   filterIntervalSchemaValidation,
   reunionSchemaValidation,
   fichierReunionSchemaValidation,
+  statiqueTableSchemaValidation,
+  operationBanqueSchemaValidation,
+  ligneBudgetaireSchemaValidation,
 };
