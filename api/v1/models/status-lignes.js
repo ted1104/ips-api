@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class fonction extends Model {
+  class Status extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -9,28 +9,22 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.hasMany(models.BanqueOperationModel, {
-        foreignKey: "partenaireId",
-        as: "operation_banque_detail",
-      });
-
-      // define association here
       this.hasMany(models.LigneBudgetairesModel, {
-        foreignKey: "partenaireId",
-        as: "partenaire_ligne_detail",
+        foreignKey: "statusId",
+        as: "status_ligne_detail_id",
       });
     }
   }
-  fonction.init(
+  Status.init(
     {
       description: DataTypes.STRING,
-      solde: DataTypes.FLOAT,
+      color: DataTypes.STRING,
     },
     {
       sequelize,
-      modelName: "PartenaireModel",
-      tableName: "partenaire",
+      modelName: "StatusLignesModel",
+      tableName: "status_lignebudgetaire",
     }
   );
-  return fonction;
+  return Status;
 };

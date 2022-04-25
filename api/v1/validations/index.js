@@ -238,13 +238,14 @@ const ligneBudgetaireSchemaValidation = Joi.object().keys({
     "string.empty": "la description de la ligne budgetaire est obligatoire",
     "any.required": "la description de la ligne budgetaire est obligatoire",
   }),
-  montant: Joi.number().required().messages({
-    "number.base": "le montant loué à cette ligne budgetaire est obligatoire",
-    "any.required": "le montant loué à cette ligne budgetaire est obligatoire",
-  }),
+
   partenaireId: Joi.number().required().messages({
     "number.base": "le partenaire est obligatoire",
     "any.required": "le partenaire est obligatoire",
+  }),
+  montant: Joi.number().required().messages({
+    "number.base": "le montant loué à cette ligne budgetaire est obligatoire",
+    "any.required": "le montant loué à cette ligne budgetaire est obligatoire",
   }),
 });
 // const uploadfilesMissionValidation = Joi.f
