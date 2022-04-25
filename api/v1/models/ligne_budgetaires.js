@@ -21,6 +21,10 @@ module.exports = (sequelize, DataTypes) => {
   }
   LigneBudgetaires.init(
     {
+      uuid: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+      },
       description: DataTypes.TEXT,
       montant: DataTypes.FLOAT,
       partenaireId: DataTypes.INTEGER,
@@ -30,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "LigneBudgetairesModel",
-      tableName: "lignebudgetaires",
+      tableName: "ligne_budgetaires",
     }
   );
   return LigneBudgetaires;

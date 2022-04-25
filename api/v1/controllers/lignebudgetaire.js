@@ -17,6 +17,7 @@ const {
   fichierReunionSchemaValidation,
   operationBanqueSchemaValidation,
   ligneBudgetaireSchemaValidation,
+  depenseLigneBudgetaireSchemaValidation,
 } = require("../validations");
 
 //models
@@ -41,6 +42,8 @@ const {
   PartenaireModel,
   LigneBudgetairesModel,
   StatusLignesModel,
+  RubriquesModel,
+  DepensesLigneBudgetairesModel,
 } = require("../models");
 
 const getAllLigneBudgetaire = asyncWrapper(async (req, res) => {
@@ -60,6 +63,47 @@ const getAllLigneBudgetaire = asyncWrapper(async (req, res) => {
   });
   return successHandler.Ok(res, data);
 });
+const getOneLigneBudgetaire = asyncWrapper(async (req, res) => {
+  const { id } = req.params;
+  const { ids, uuids } = splitid(id);
+  const getOne = await LigneBudgetairesModel.findOne({
+    where: { id: ids, uuid: uuids },
+    include: [
+      {
+        model: PartenaireModel,
+        as: "partenaire_ligne_detail",
+        attributes: ["id", "description", "solde"],
+      },
+      {
+        model: StatusLignesModel,
+        as: "status_ligne_detail_id",
+        attributes: ["id", "description", "color"],
+      },
+    ],
+  });
+
+  const rubriques = await RubriquesModel.findAll({
+    attributes: ["id", "description"],
+    include: [
+      {
+        model: DepensesLigneBudgetairesModel,
+        as: "depenses_detail",
+        where: { ligneBudgetaireId: ids },
+        required: false,
+      },
+    ],
+  });
+  const datas = {
+    ligne: getOne,
+    rubriques,
+  };
+
+  if (!getOne) {
+    throw new BadRequest("Aucune ligne budgetaire trouvée");
+  }
+  return successHandler.Ok(res, datas);
+});
+
 const createLigneBudgetaire = asyncWrapper(async (req, res) => {
   const body = req.body;
 
@@ -85,4 +129,39 @@ const createLigneBudgetaire = asyncWrapper(async (req, res) => {
   return successHandler.Created(res, saved, msg);
 });
 
-module.exports = { getAllLigneBudgetaire, createLigneBudgetaire };
+const createDepenseLigneBudgetaire = asyncWrapper(async (req, res) => {
+  const body = req.body;
+  const validation = depenseLigneBudgetaireSchemaValidation.validate(body);
+  const { error, value } = validation;
+  if (error) {
+    throw new BadRequest(error.details[0].message);
+  }
+
+  const newbody = { ...body, date_creation: new Date() };
+  const saved = await DepensesLigneBudgetairesModel.create(newbody);
+
+  //deduire montant dans le solde en banque du partenaire
+  const ligneBudgtaire = await LigneBudgetairesModel.findOne({
+    where: { id: body.ligneBudgetaireId },
+  });
+  const { partenaireId } = ligneBudgtaire;
+  const partenaire = await PartenaireModel.findOne({
+    where: { id: partenaireId },
+  });
+
+  const newAmount = parseFloat(partenaire.solde) - parseFloat(body.montant);
+  const updated = await PartenaireModel.update(
+    { solde: newAmount },
+    { where: { id: partenaireId } }
+  );
+
+  const msg = "la depense a été bien enregistré";
+  return successHandler.Created(res, saved, msg);
+});
+
+module.exports = {
+  getAllLigneBudgetaire,
+  createLigneBudgetaire,
+  getOneLigneBudgetaire,
+  createDepenseLigneBudgetaire,
+};

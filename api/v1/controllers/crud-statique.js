@@ -17,6 +17,7 @@ const {
   TypeReunionsModel,
   PartenaireModel,
   BanqueOperationModel,
+  RubriquesModel,
 } = require("../models");
 
 /* 
@@ -263,6 +264,37 @@ const createPartenaire = asyncWrapper(async (req, res) => {
   #########################
   #########################
   #########################
+  ### CRUD :===> RUBRIQUE FINANCE ###
+*/
+
+const getAllRubriques = asyncWrapper(async (req, res) => {
+  const data = await RubriquesModel.findAll({
+    attributes: ["id", "description"],
+  });
+  return successHandler.Ok(res, data);
+});
+
+const createRubriques = asyncWrapper(async (req, res) => {
+  const body = req.body;
+  const validation = statiqueTableSchemaValidation.validate(body);
+  const { error, value } = validation;
+  if (error) {
+    throw new BadRequest(error.details[0].message);
+  }
+
+  const checkIfExist = await RubriquesModel.findOne({ where: body });
+  if (checkIfExist) {
+    throw new BadRequest("cette rubrique existe déjà");
+  }
+  const data = await RubriquesModel.create(body);
+  const msg = "La rubrique a été crée avec succès";
+  return successHandler.Created(res, data, msg);
+});
+
+/* 
+  #########################
+  #########################
+  #########################
   ### GET ALL STATIQUE TABLES ###
 */
 
@@ -326,4 +358,6 @@ module.exports = {
   createTypeReunion,
   getAllPartenaire,
   createPartenaire,
+  getAllRubriques,
+  createRubriques,
 };
