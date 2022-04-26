@@ -267,6 +267,21 @@ const depenseLigneBudgetaireSchemaValidation = Joi.object().keys({
     "any.required": "le motif est obligatoire",
   }),
 });
+
+const rubriqueFixeMontantSchemaValidation = Joi.object().keys({
+  rubriqueId: Joi.number().required().messages({
+    "number.base": "la rubrique est obligatoire",
+    "any.required": "la rubriqueId est obligatoire",
+  }),
+  ligneBudgetaireId: Joi.number().required().messages({
+    "number.base": "la ligne budgetaire est obligatoire",
+    "any.required": "la ligne budgetaire est obligatoire",
+  }),
+  montant: Joi.number().required().messages({
+    "number.base": "le montant depensé est obligatoire",
+    "any.required": "le montant depensé obligatoire",
+  }),
+});
 // const uploadfilesMissionValidation = Joi.f
 module.exports = {
   loginSchemaValidation,
@@ -281,4 +296,5 @@ module.exports = {
   operationBanqueSchemaValidation,
   ligneBudgetaireSchemaValidation,
   depenseLigneBudgetaireSchemaValidation,
+  rubriqueFixeMontantSchemaValidation,
 };

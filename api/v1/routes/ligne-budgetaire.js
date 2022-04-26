@@ -6,6 +6,7 @@ const {
   createLigneBudgetaire,
   getOneLigneBudgetaire,
   createDepenseLigneBudgetaire,
+  createMontantFixeRubrique,
 } = require("../controllers/lignebudgetaire");
 
 //middleware
@@ -18,5 +19,8 @@ router
 
 router.route("/:id").get(authMiddleware, getOneLigneBudgetaire);
 router.route("/add-depense").post(authMiddleware, createDepenseLigneBudgetaire);
+router
+  .route("/add-montant-fixe")
+  .post(authMiddleware, createMontantFixeRubrique);
 
 module.exports = router;

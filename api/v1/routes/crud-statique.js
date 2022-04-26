@@ -23,6 +23,8 @@ const {
   createPartenaire,
   getAllRubriques,
   createRubriques,
+  getAllTypeFichier,
+  createTypeFichier,
 } = require("../controllers/crud-statique");
 
 const authMiddleware = require("../middlewares/auth");
@@ -73,4 +75,9 @@ router
   .route("/rubrique")
   .get(authMiddleware, getAllRubriques)
   .post(authMiddleware, createRubriques);
+
+router
+  .route("/type-fichier")
+  .get(authMiddleware, getAllTypeFichier)
+  .post(authMiddleware, createTypeFichier);
 module.exports = router;

@@ -31,8 +31,12 @@ const {
 } = require("../models");
 
 const getAllMissions = asyncWrapper(async (req, res) => {
-  //analyse de filtre
-  const condition_filter = filterRequest.mission(req.query);
+  let condition_filter = filterRequest.mission(req.query);
+  const { role, structure } = req.user;
+
+  if (role === 5) {
+    condition_filter = { ...condition_filter, structureId: structure };
+  }
 
   const data = await MissionsModel.findAll({
     order: [["createdAt", "DESC"]],
@@ -50,6 +54,39 @@ const getAllMissions = asyncWrapper(async (req, res) => {
     ],
     attributes: attrb.attr_missions,
     where: condition_filter,
+  });
+
+  //si c;est un participant
+  return successHandler.Ok(res, data);
+});
+
+const getAllMissionImParticipated = asyncWrapper(async (req, res) => {
+  const { id, role, structure } = req.user;
+  const agentDetail = await AuthModel.findOne({ where: { id: id } });
+
+  // console.log(req.user);
+
+  let condition_filter = filterRequest.mission(req.query);
+  const data = await MissionsModel.findAll({
+    where: condition_filter,
+    include: [
+      {
+        model: StatusModel,
+        as: "status_detail_id",
+        attributes: attrb.attr_statique_status,
+      },
+      {
+        model: StructureModel,
+        as: "structure_detail_mission_id",
+        attributes: attrb.attr_statique_tables,
+      },
+      {
+        model: MissionsParticipantsModel,
+        as: "missions_participant_detail_id",
+        required: true,
+        where: { agentId: agentDetail.agentId },
+      },
+    ],
   });
   return successHandler.Ok(res, data);
 });
@@ -85,6 +122,13 @@ const getOneMission = asyncWrapper(async (req, res) => {
             "prenom",
             "matricule",
             "niveau_etudes",
+          ],
+          include: [
+            {
+              model: FonctionModel,
+              as: "fonction_detail_id",
+              attributes: ["id", "description"],
+            },
           ],
         },
       },
@@ -136,6 +180,7 @@ const createMission = asyncWrapper(async (req, res) => {
 
   //create_participants
   const idMission = savedMission.id;
+
   const participants = body.agents.map((part) => {
     return { ...part, missionId: idMission };
   });
@@ -184,6 +229,7 @@ const createMissionFiles = asyncWrapper(async (req, res) => {
 
 module.exports = {
   getAllMissions,
+  getAllMissionImParticipated,
   createMission,
   createMissionFiles,
   getOneMission,

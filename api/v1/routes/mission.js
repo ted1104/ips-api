@@ -7,12 +7,16 @@ const {
   createMission,
   createMissionFiles,
   getOneMission,
+  getAllMissionImParticipated,
 } = require("../controllers/missions");
 
 router
   .route("/")
   .get(authMiddleware, getAllMissions)
   .post(authMiddleware, createMission);
+router
+  .route("/mission-participated")
+  .get(authMiddleware, getAllMissionImParticipated);
 router.route("/:id").get(authMiddleware, getOneMission);
 router.route("/upload-file").post(authMiddleware, createMissionFiles);
 

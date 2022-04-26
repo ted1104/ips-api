@@ -18,6 +18,7 @@ const {
   operationBanqueSchemaValidation,
   ligneBudgetaireSchemaValidation,
   depenseLigneBudgetaireSchemaValidation,
+  rubriqueFixeMontantSchemaValidation,
 } = require("../validations");
 
 //models
@@ -44,6 +45,7 @@ const {
   StatusLignesModel,
   RubriquesModel,
   DepensesLigneBudgetairesModel,
+  RubriqueFixeMontantLigneModel,
 } = require("../models");
 
 const getAllLigneBudgetaire = asyncWrapper(async (req, res) => {
@@ -85,6 +87,13 @@ const getOneLigneBudgetaire = asyncWrapper(async (req, res) => {
   const rubriques = await RubriquesModel.findAll({
     attributes: ["id", "description"],
     include: [
+      {
+        model: RubriqueFixeMontantLigneModel,
+        as: "fixe_montant_detail",
+        where: { ligneBudgetaireId: ids },
+        attributes: ["montant"],
+        required: false,
+      },
       {
         model: DepensesLigneBudgetairesModel,
         as: "depenses_detail",
@@ -158,10 +167,34 @@ const createDepenseLigneBudgetaire = asyncWrapper(async (req, res) => {
   const msg = "la depense a été bien enregistré";
   return successHandler.Created(res, saved, msg);
 });
+const createMontantFixeRubrique = asyncWrapper(async (req, res) => {
+  const body = req.body;
+  const validation = rubriqueFixeMontantSchemaValidation.validate(body);
+  const { value, error } = validation;
+  if (error) {
+    throw new BadRequest(error.details[0].message);
+  }
 
+  //checking if another config exist
+  const { rubriqueId, ligneBudgetaireId, montant } = body;
+  const check = await RubriqueFixeMontantLigneModel.findOne({
+    where: { rubriqueId, ligneBudgetaireId },
+  });
+  if (check) {
+    throw new BadRequest(
+      "Cette rubrique possède déjà une configuration du montant pour cette ligne budgetaire"
+    );
+  }
+
+  const saved = await RubriqueFixeMontantLigneModel.create(body);
+  const msg = "le montant fixe a été bien configuré";
+
+  return successHandler.Created(res, saved, msg);
+});
 module.exports = {
   getAllLigneBudgetaire,
   createLigneBudgetaire,
   getOneLigneBudgetaire,
   createDepenseLigneBudgetaire,
+  createMontantFixeRubrique,
 };

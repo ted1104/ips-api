@@ -18,6 +18,7 @@ const {
   PartenaireModel,
   BanqueOperationModel,
   RubriquesModel,
+  TypeFichierModel,
 } = require("../models");
 
 /* 
@@ -295,6 +296,37 @@ const createRubriques = asyncWrapper(async (req, res) => {
   #########################
   #########################
   #########################
+  ### CRUD :===> PARTENAIRE ###
+*/
+
+const getAllTypeFichier = asyncWrapper(async (req, res) => {
+  const data = await TypeFichierModel.findAll({
+    attributes: ["id", "description"],
+  });
+  return successHandler.Ok(res, data);
+});
+
+const createTypeFichier = asyncWrapper(async (req, res) => {
+  const body = req.body;
+  const validation = statiqueTableSchemaValidation.validate(body);
+  const { error, value } = validation;
+  if (error) {
+    throw new BadRequest(error.details[0].message);
+  }
+
+  const checkIfExist = await TypeFichierModel.findOne({ where: body });
+  if (checkIfExist) {
+    throw new BadRequest("ce partenaire existe déjà");
+  }
+  const data = await TypeFichierModel.create(body);
+  const msg = "Le partenaire a été crée avec succès";
+  return successHandler.Created(res, data, msg);
+});
+
+/* 
+  #########################
+  #########################
+  #########################
   ### GET ALL STATIQUE TABLES ###
 */
 
@@ -360,4 +392,6 @@ module.exports = {
   createPartenaire,
   getAllRubriques,
   createRubriques,
+  getAllTypeFichier,
+  createTypeFichier,
 };

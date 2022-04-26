@@ -19,6 +19,7 @@ const {
 
 const getAllAgents = asyncWrapper(async (req, res) => {
   const data = await AgentModel.findAll({
+    order: [["createdAt", "DESC"]],
     include: [
       {
         model: CategorieProfModel,
