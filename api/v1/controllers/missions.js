@@ -1,3 +1,5 @@
+const { Op } = require("sequelize");
+
 const asyncWrapper = require("../middlewares/async");
 const { BadRequest } = require("../errors");
 const {
@@ -227,10 +229,53 @@ const createMissionFiles = asyncWrapper(async (req, res) => {
   return successHandler.Created(res, savedFile, msg);
 });
 
+const changeMissionStatus = asyncWrapper(async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+  const { ids, uuids } = splitid(id);
+  const st = ["ATTENTE", "EN COURS", "TERMINEE", "ARCHIVEE"];
+
+  if (!status) {
+    throw new BadRequest("Veuillez svp selectionner un status");
+  }
+
+  //check if mission have already files uploaded (PV, ORDRE DE MISSION)
+  if (status === 3 || status === 4) {
+    const havePvfilesPv = await MissionsFichiersModel.findOne({
+      where: { missionId: ids, typefichierId: 2 },
+    });
+    const havePvfilesOrdre = await MissionsFichiersModel.findOne({
+      where: { missionId: ids, typefichierId: 4 },
+    });
+    if (!havePvfilesPv || !havePvfilesOrdre) {
+      throw new BadRequest(
+        `Imposssible de changer cette mission en status ${
+          st[status - 1]
+        } car certains fichiers sont manquants (PV ou ORDER DE MISSION) `
+      );
+    }
+  }
+
+  const updated = await MissionsModel.update(
+    { statusId: status },
+    { where: { id: ids, uuid: uuids } }
+  );
+
+  if (updated == 0) {
+    throw new BadRequest(
+      "Impossible de changer le status de cette mission, il se peut que ça n'existe pas"
+    );
+  }
+
+  const msg = "le status de la mission a été changé avec succès";
+  return successHandler.Created(res, updated, msg);
+});
+
 module.exports = {
   getAllMissions,
   getAllMissionImParticipated,
   createMission,
   createMissionFiles,
   getOneMission,
+  changeMissionStatus,
 };

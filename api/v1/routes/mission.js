@@ -8,6 +8,7 @@ const {
   createMissionFiles,
   getOneMission,
   getAllMissionImParticipated,
+  changeMissionStatus,
 } = require("../controllers/missions");
 
 router
@@ -19,5 +20,6 @@ router
   .get(authMiddleware, getAllMissionImParticipated);
 router.route("/:id").get(authMiddleware, getOneMission);
 router.route("/upload-file").post(authMiddleware, createMissionFiles);
+router.route("/status/:id").patch(authMiddleware, changeMissionStatus);
 
 module.exports = router;
