@@ -71,6 +71,7 @@ const getAllMissionImParticipated = asyncWrapper(async (req, res) => {
   let condition_filter = filterRequest.mission(req.query);
   const data = await MissionsModel.findAll({
     where: condition_filter,
+    order: [["createdAt", "DESC"]],
     include: [
       {
         model: StatusModel,

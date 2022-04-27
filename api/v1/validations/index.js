@@ -41,7 +41,7 @@ const agentCreateSchemaValidation = Joi.object().keys({
     "string.empty": "le niveau d'étude de l'agent ne doit pas être vide",
     "any.required": "le niveau d'étude de l'agent est obligatoire",
   }),
-  num_cnom_cnop_cnoi: Joi.string(),
+  num_cnom_cnop_cnoi: Joi.string().allow(null, ""),
   catProfId: Joi.number().required().messages({
     "number.base":
       "la categorie professionnelle de l'agent ne doit pas être vide",
@@ -53,7 +53,7 @@ const agentCreateSchemaValidation = Joi.object().keys({
       "la référence d'affectation de l'agent ne doit pas être vide",
     "any.required": "le référence d'affectation de l'agent est obligatoire",
   }),
-  ref_arret_admis_status: Joi.string(),
+  ref_arret_admis_status: Joi.string().allow(null, ""),
   structureId: Joi.number().required().messages({
     "number.base": "la structure de l'agent ne doit pas être vide",
     "any.required": "la structure d'affectation de l'agent est obligatoire",

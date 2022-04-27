@@ -15,6 +15,9 @@ const {
   ZoneSanteModel,
   AgentModel,
   AuthModel,
+  MissionsParticipantsModel,
+  MissionsModel,
+  StatusModel,
 } = require("../models");
 
 const getAllAgents = asyncWrapper(async (req, res) => {
@@ -126,12 +129,49 @@ const getOneAgent = asyncWrapper(async (req, res) => {
           },
         ],
       },
+      {
+        model: MissionsParticipantsModel,
+        as: "agent_participant_detail_id",
+        attributes: ["id"],
+        limit: 5,
+        offset: 0,
+        order: [["createdAt", "DESC"]],
+        include: [
+          {
+            model: MissionsModel,
+            as: "missions_participant_detail_id",
+            attributes: ["id", "uuid", "nom", "date_debut"],
+
+            include: [
+              {
+                model: StatusModel,
+                as: "status_detail_id",
+                attributes: attrb.attr_statique_status,
+              },
+              {
+                model: StructureModel,
+                as: "structure_detail_mission_id",
+                attributes: attrb.attr_statique_tables,
+              },
+            ],
+          },
+        ],
+      },
     ],
   });
 
   if (!oneAgent) {
     throw new BadRequest("Aucun agent trouvé");
   }
-  return successHandler.Ok(res, oneAgent);
+
+  const nbMission = await MissionsParticipantsModel.count({
+    where: { agentId: ids },
+  });
+
+  const datas = {
+    agent: oneAgent,
+    nbre_mission: nbMission,
+  };
+  return successHandler.Ok(res, datas);
 });
 module.exports = { getAllAgents, getOneAgent, createAgent };
