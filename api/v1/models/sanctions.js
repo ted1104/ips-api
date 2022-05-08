@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "missionId",
         as: "sanction_proposee",
       });
+      this.belongsTo(models.AgentModel, {
+        foreignKey: "created_by",
+        as: "creer_par",
+      });
     }
   }
   Sanctions.init(

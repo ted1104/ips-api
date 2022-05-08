@@ -52,6 +52,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "created_by",
         as: "user_create",
       });
+      this.hasMany(models.SanctionsModel, {
+        foreignKey: "created_by",
+        as: "creer_par",
+      });
     }
   }
   Agent.init(

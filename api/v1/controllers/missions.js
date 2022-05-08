@@ -130,6 +130,18 @@ const getOneMission = asyncWrapper(async (req, res) => {
         attributes: attrb.attr_statique_tables,
       },
       {
+        model: SanctionsModel,
+        as: "sanction_proposee",
+        attributes: ["id", "description"],
+        include: [
+          {
+            model: AgentModel,
+            as: "creer_par",
+            attributes: ["id", "nom", "prenom"],
+          },
+        ],
+      },
+      {
         model: MissionsParticipantsModel,
         as: "missions_participant_detail_id",
         attributes: ["id"],
