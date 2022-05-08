@@ -286,6 +286,21 @@ const rubriqueFixeMontantSchemaValidation = Joi.object().keys({
     "any.required": "le montant depensé obligatoire",
   }),
 });
+
+const sanctionSchemaValidation = Joi.object().keys({
+  missionId: Joi.number().required().messages({
+    "number.base": "la mission à sanctionner est obligatoire",
+    "any.required": "la mission à sanctionner est obligatoire",
+  }),
+  description: Joi.string().required().messages({
+    "string.empty": "la description de la sanction est obligatoire",
+    "any.required": "la description de la sanction est obligatoire",
+  }),
+  created_by: Joi.number().required().messages({
+    "number.base": "le createur de la sanction est obligatoire",
+    "any.required": "le createur de la sanction est obligatoire",
+  }),
+});
 // const uploadfilesMissionValidation = Joi.f
 module.exports = {
   loginSchemaValidation,
@@ -301,4 +316,5 @@ module.exports = {
   ligneBudgetaireSchemaValidation,
   depenseLigneBudgetaireSchemaValidation,
   rubriqueFixeMontantSchemaValidation,
+  sanctionSchemaValidation,
 };

@@ -74,7 +74,7 @@ const login = asyncWrapper(async (req, res) => {
       id,
       role,
       structure: agent_detail_id.structureId,
-      agent: agent_detail_id.agentId,
+      agentId: agent_detail_id.id,
     },
     process.env.JWT_SECRET_KEY,
     {

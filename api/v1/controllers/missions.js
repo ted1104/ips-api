@@ -13,6 +13,7 @@ const {
   missionSchemaValidation,
   fichierMissionSchemaValidation,
   filterIntervalSchemaValidation,
+  sanctionSchemaValidation,
 } = require("../validations");
 
 //models
@@ -31,6 +32,7 @@ const {
   StatusModel,
   TypeFichierModel,
   PartenaireModel,
+  SanctionsModel,
 } = require("../models");
 
 const getAllMissions = asyncWrapper(async (req, res) => {
@@ -288,6 +290,20 @@ const changeMissionStatus = asyncWrapper(async (req, res) => {
   return successHandler.Created(res, updated, msg);
 });
 
+const createSanction = asyncWrapper(async (req, res) => {
+  let body = req.body;
+  const { agentId } = req.user;
+  body = { ...body, created_by: agentId };
+
+  const validation = sanctionSchemaValidation.validate(body);
+  const { value, error } = validation;
+  if (error) {
+    throw new BadRequest(error.details[0].message);
+  }
+  const savedSanction = await SanctionsModel.create(body);
+  const msg = "La sanction à cette mission a été enregistré";
+  return successHandler.Created(res, savedSanction, msg);
+});
 module.exports = {
   getAllMissions,
   getAllMissionImParticipated,
@@ -295,4 +311,5 @@ module.exports = {
   createMissionFiles,
   getOneMission,
   changeMissionStatus,
+  createSanction,
 };

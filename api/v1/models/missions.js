@@ -33,6 +33,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "partenaireId",
         as: "partenaire_mission",
       });
+      this.hasMany(models.SanctionsModel, {
+        foreignKey: "missionId",
+        as: "sanction_proposee",
+      });
     }
   }
   Missions.init(

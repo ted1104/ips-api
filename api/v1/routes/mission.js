@@ -9,6 +9,7 @@ const {
   getOneMission,
   getAllMissionImParticipated,
   changeMissionStatus,
+  createSanction,
 } = require("../controllers/missions");
 
 router
@@ -21,5 +22,6 @@ router
 router.route("/:id").get(authMiddleware, getOneMission);
 router.route("/upload-file").post(authMiddleware, createMissionFiles);
 router.route("/status/:id").patch(authMiddleware, changeMissionStatus);
+router.route("/create-sanction").post(authMiddleware, createSanction);
 
 module.exports = router;
