@@ -368,7 +368,10 @@ const getStructureAndAgents = async (req, res) => {
   const structure = await StructureModel.findAll({
     attributes: attrb.attr_statique_tables,
   });
-  return successHandler.Ok(res, { agent, structure });
+  const partenaire = await PartenaireModel.findAll({
+    attributes: attrb.attr_statique_tables,
+  });
+  return successHandler.Ok(res, { agent, structure, partenaire });
 };
 module.exports = {
   getAllRole,

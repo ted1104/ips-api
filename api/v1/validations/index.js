@@ -141,6 +141,10 @@ const missionSchemaValidation = Joi.object().keys({
     "number.base": "cette mission doit être affecté à une structure",
     "any.required": "cette mission doit être affecté à une structure",
   }),
+  partenaireId: Joi.number().required().messages({
+    "number.base": "la source de fond de cette mission est obligatoire",
+    "any.required": "la source de fond de cette mission est obligatoire",
+  }),
 });
 
 const fichierMissionSchemaValidation = Joi.object().keys({

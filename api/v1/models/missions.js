@@ -28,6 +28,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "missionId",
         as: "missions_participant_detail_id",
       });
+
+      this.belongsTo(models.PartenaireModel, {
+        foreignKey: "partenaireId",
+        as: "partenaire_mission",
+      });
     }
   }
   Missions.init(
@@ -41,6 +46,7 @@ module.exports = (sequelize, DataTypes) => {
       date_create: DataTypes.DATE,
       statusId: DataTypes.INTEGER,
       structureId: DataTypes.INTEGER,
+      partenaireId: DataTypes.INTEGER,
     },
     {
       sequelize,

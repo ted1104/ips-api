@@ -30,6 +30,7 @@ const {
   MissionsFichiersModel,
   StatusModel,
   TypeFichierModel,
+  PartenaireModel,
 } = require("../models");
 
 const getAllMissions = asyncWrapper(async (req, res) => {
@@ -51,6 +52,11 @@ const getAllMissions = asyncWrapper(async (req, res) => {
       {
         model: StructureModel,
         as: "structure_detail_mission_id",
+        attributes: attrb.attr_statique_tables,
+      },
+      {
+        model: PartenaireModel,
+        as: "partenaire_mission",
         attributes: attrb.attr_statique_tables,
       },
     ],
@@ -89,6 +95,11 @@ const getAllMissionImParticipated = asyncWrapper(async (req, res) => {
         required: true,
         where: { agentId: agentDetail.agentId },
       },
+      {
+        model: PartenaireModel,
+        as: "partenaire_mission",
+        attributes: attrb.attr_statique_tables,
+      },
     ],
   });
   return successHandler.Ok(res, data);
@@ -109,6 +120,11 @@ const getOneMission = asyncWrapper(async (req, res) => {
       {
         model: StructureModel,
         as: "structure_detail_mission_id",
+        attributes: attrb.attr_statique_tables,
+      },
+      {
+        model: PartenaireModel,
+        as: "partenaire_mission",
         attributes: attrb.attr_statique_tables,
       },
       {
