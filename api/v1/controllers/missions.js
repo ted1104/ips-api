@@ -246,7 +246,7 @@ const changeMissionStatus = asyncWrapper(async (req, res) => {
       where: { missionId: ids, typefichierId: 2 },
     });
     const havePvfilesOrdre = await MissionsFichiersModel.findOne({
-      where: { missionId: ids, typefichierId: 4 },
+      where: { missionId: ids, typefichierId: 3 },
     });
     if (!havePvfilesPv || !havePvfilesOrdre) {
       throw new BadRequest(
