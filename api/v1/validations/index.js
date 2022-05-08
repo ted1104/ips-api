@@ -292,8 +292,9 @@ const sanctionSchemaValidation = Joi.object().keys({
     "number.base": "la mission à sanctionner est obligatoire",
     "any.required": "la mission à sanctionner est obligatoire",
   }),
-  description: Joi.string().required().messages({
+  description: Joi.string().required().trim().messages({
     "string.empty": "la description de la sanction est obligatoire",
+    "string.trim": "la description de la sanction est obligatoire",
     "any.required": "la description de la sanction est obligatoire",
   }),
   created_by: Joi.number().required().messages({
