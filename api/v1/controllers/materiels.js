@@ -138,9 +138,9 @@ const addInventaire = asyncWrapper(async (req, res) => {
 });
 
 const getInventaire = asyncWrapper(async (req, res) => {
-  const year = 2022;
+  const year = new Date();
   const search = req.query;
-  let whereCondition = { year };
+  let whereCondition = { year: year.getFullYear() };
   // if (search) {
   //   whereCondition  ={
   //     ...whereCondition,
