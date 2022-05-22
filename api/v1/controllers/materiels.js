@@ -139,12 +139,27 @@ const addInventaire = asyncWrapper(async (req, res) => {
 
 const getInventaire = asyncWrapper(async (req, res) => {
   const year = 2022;
+  const search = req.query;
+  let whereCondition = { year };
+  // if (search) {
+  //   whereCondition  ={
+  //     ...whereCondition,
+
+  //   }
+  // }
   const data = await MaterielsModel.findAll();
   const inventaire = await InventairesModel.findAll({
-    attributes: ["id", "year", "trimestreId", "materielId", "qte", "etat"],
-    where: {
-      year,
-    },
+    attributes: [
+      "id",
+      "year",
+      "trimestreId",
+      "materielId",
+      "qte",
+      "etat",
+      "observation",
+      "ecart",
+    ],
+    where: whereCondition,
   });
 
   const datas = data.map((item) => {
@@ -166,10 +181,18 @@ const getInventaire = asyncWrapper(async (req, res) => {
       description,
       qte,
       etat,
-      first: first[0] ? first[0] : { qte: "-" },
-      second: second[0] ? second[0] : { qte: "-" },
-      thrid: thrid[0] ? thrid[0] : { qte: "-" },
-      four: four[0] ? four[0] : { qte: "-" },
+      first: first[0]
+        ? first[0]
+        : { qte: "-", etat: "-", observation: "-", ecart: "-" },
+      second: second[0]
+        ? second[0]
+        : { qte: "-", etat: "-", observation: "-", ecart: "-" },
+      thrid: thrid[0]
+        ? thrid[0]
+        : { qte: "-", etat: "-", observation: "-", ecart: "-" },
+      four: four[0]
+        ? four[0]
+        : { qte: "-", etat: "-", observation: "-", ecart: "-" },
     };
   });
 
