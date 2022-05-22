@@ -16,7 +16,7 @@ const routeMissions = require(`./api/${process.env.VERSION}/routes/mission`);
 const routeReunions = require(`./api/${process.env.VERSION}/routes/reunion`);
 const routeBanques = require(`./api/${process.env.VERSION}/routes/banque`);
 const routeDashboard = require(`./api/${process.env.VERSION}/routes/dashboard`);
-const routeLigneBudgetaire = require(`./api/${process.env.VERSION}/routes/ligne-budgetaire`);
+const routeFinances = require(`./api/${process.env.VERSION}/routes/finances`);
 const routeAuth = require(`./api/${process.env.VERSION}/routes/auth`);
 
 //middlewares
@@ -30,7 +30,7 @@ app.use(`/api/${process.env.VERSION}/agent`, routeAgents);
 app.use(`/api/${process.env.VERSION}/mission`, routeMissions);
 app.use(`/api/${process.env.VERSION}/reunion`, routeReunions);
 app.use(`/api/${process.env.VERSION}/banque`, routeBanques);
-app.use(`/api/${process.env.VERSION}/ligne-budgetaire`, routeLigneBudgetaire);
+app.use(`/api/${process.env.VERSION}/finances`, routeFinances);
 app.use(`/api/${process.env.VERSION}/auth`, routeAuth);
 app.use(`/api/${process.env.VERSION}/dashboard`, routeDashboard);
 app.use(notFoundPage);

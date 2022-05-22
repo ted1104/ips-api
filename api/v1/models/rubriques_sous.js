@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Rubrique_fixe_montant extends Model {
+  class rubriques_sous extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,21 +11,20 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.belongsTo(models.RubriquesModel, {
         foreignKey: "rubriqueId",
-        as: "fixe_montant_detail",
+        as: "sous_rubriques",
       });
     }
   }
-  Rubrique_fixe_montant.init(
+  rubriques_sous.init(
     {
+      description: DataTypes.STRING,
       rubriqueId: DataTypes.INTEGER,
-      ligneBudgetaireId: DataTypes.INTEGER,
-      montant: DataTypes.FLOAT,
     },
     {
       sequelize,
-      modelName: "RubriqueFixeMontantModel",
-      tableName: "fin_rubrique_fixe_montant",
+      modelName: "SousRubriquesModel",
+      tableName: "fin_rubriques_sous",
     }
   );
-  return Rubrique_fixe_montant;
+  return rubriques_sous;
 };

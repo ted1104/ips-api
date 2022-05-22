@@ -211,6 +211,16 @@ const fichierReunionSchemaValidation = Joi.object().keys({
   }),
 });
 
+const sousRubriqueTableSchemaValidation = Joi.object().keys({
+  rubriqueId: Joi.number().required().messages({
+    "number.base": "la rubrique est obligatoire",
+    "any.required": "la rubrique est obligatoire",
+  }),
+  description: Joi.string().required().messages({
+    "string.empty": "la description est obligatoire",
+    "any.required": "la description est obligatoire",
+  }),
+});
 const statiqueTableSchemaValidation = Joi.object().keys({
   description: Joi.string().required().messages({
     "string.empty": "la description est obligatoire",
@@ -253,14 +263,14 @@ const ligneBudgetaireSchemaValidation = Joi.object().keys({
   }),
 });
 
-const depenseLigneBudgetaireSchemaValidation = Joi.object().keys({
-  rubriqueId: Joi.number().required().messages({
-    "number.base": "la rubrique est obligatoire",
-    "any.required": "la rubriqueId est obligatoire",
+const depenseSchemaValidation = Joi.object().keys({
+  sousRubriqueId: Joi.number().required().messages({
+    "number.base": "la sous rubrique est obligatoire",
+    "any.required": "la sous rubriqueId est obligatoire",
   }),
-  ligneBudgetaireId: Joi.number().required().messages({
-    "number.base": "la ligne budgetaire est obligatoire",
-    "any.required": "la ligne budgetaire est obligatoire",
+  partenaireId: Joi.number().required().messages({
+    "number.base": "le partenaire est obligatoire",
+    "any.required": "le partenaire est obligatoire",
   }),
   montant: Joi.number().required().messages({
     "number.base": "le montant depensé est obligatoire",
@@ -315,7 +325,8 @@ module.exports = {
   statiqueTableSchemaValidation,
   operationBanqueSchemaValidation,
   ligneBudgetaireSchemaValidation,
-  depenseLigneBudgetaireSchemaValidation,
+  depenseSchemaValidation,
   rubriqueFixeMontantSchemaValidation,
   sanctionSchemaValidation,
+  sousRubriqueTableSchemaValidation,
 };

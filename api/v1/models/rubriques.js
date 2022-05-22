@@ -9,11 +9,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.hasMany(models.DepensesLigneBudgetairesModel, {
+      this.hasMany(models.SousRubriquesModel, {
+        foreignKey: "rubriqueId",
+        as: "sous_rubriques",
+      });
+      this.hasMany(models.DepensesModel, {
         foreignKey: "rubriqueId",
         as: "depenses_detail",
       });
-      this.hasOne(models.RubriqueFixeMontantLigneModel, {
+      this.hasOne(models.RubriqueFixeMontantModel, {
         foreignKey: "rubriqueId",
         as: "fixe_montant_detail",
       });
@@ -21,12 +25,16 @@ module.exports = (sequelize, DataTypes) => {
   }
   Rubriques.init(
     {
+      uuid: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+      },
       description: DataTypes.STRING,
     },
     {
       sequelize,
       modelName: "RubriquesModel",
-      tableName: "rubriques",
+      tableName: "fin_rubriques",
     }
   );
   return Rubriques;

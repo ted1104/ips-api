@@ -25,6 +25,8 @@ const {
   createRubriques,
   getAllTypeFichier,
   createTypeFichier,
+  getAllSousRubriques,
+  createSousRubriques,
 } = require("../controllers/crud-statique");
 
 const authMiddleware = require("../middlewares/auth");
@@ -75,6 +77,11 @@ router
   .route("/rubrique")
   .get(authMiddleware, getAllRubriques)
   .post(authMiddleware, createRubriques);
+
+router
+  .route("/sous-rubrique")
+  .get(authMiddleware, getAllSousRubriques)
+  .post(authMiddleware, createSousRubriques);
 
 router
   .route("/type-fichier")

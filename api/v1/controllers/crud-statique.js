@@ -3,7 +3,10 @@ const sequelize = require("sequelize");
 const asyncWrapper = require("../middlewares/async");
 const { BadRequest } = require("../errors");
 const { successHandler, attrb } = require("../helpers");
-const { statiqueTableSchemaValidation } = require("../validations");
+const {
+  statiqueTableSchemaValidation,
+  sousRubriqueTableSchemaValidation,
+} = require("../validations");
 
 const {
   RoleModel,
@@ -19,6 +22,7 @@ const {
   BanqueOperationModel,
   RubriquesModel,
   TypeFichierModel,
+  SousRubriquesModel,
 } = require("../models");
 
 /* 
@@ -270,7 +274,14 @@ const createPartenaire = asyncWrapper(async (req, res) => {
 
 const getAllRubriques = asyncWrapper(async (req, res) => {
   const data = await RubriquesModel.findAll({
-    attributes: ["id", "description"],
+    attributes: ["id", "uuid", "description"],
+    include: [
+      {
+        model: SousRubriquesModel,
+        as: "sous_rubriques",
+        attributes: attrb.attr_statique_tables,
+      },
+    ],
   });
   return successHandler.Ok(res, data);
 });
@@ -289,6 +300,37 @@ const createRubriques = asyncWrapper(async (req, res) => {
   }
   const data = await RubriquesModel.create(body);
   const msg = "La rubrique a été crée avec succès";
+  return successHandler.Created(res, data, msg);
+});
+
+/* 
+  #########################
+  #########################
+  #########################
+  ### CRUD :===> SOUS RUBRIQUE FINANCE ###
+*/
+
+const getAllSousRubriques = asyncWrapper(async (req, res) => {
+  const data = await SousRubriquesModel.findAll({
+    attributes: ["id", "description", "rubriqueId"],
+  });
+  return successHandler.Ok(res, data);
+});
+
+const createSousRubriques = asyncWrapper(async (req, res) => {
+  const body = req.body;
+  const validation = sousRubriqueTableSchemaValidation.validate(body);
+  const { error, value } = validation;
+  if (error) {
+    throw new BadRequest(error.details[0].message);
+  }
+
+  const checkIfExist = await SousRubriquesModel.findOne({ where: body });
+  if (checkIfExist) {
+    throw new BadRequest("cette sous rubrique existe déjà");
+  }
+  const data = await SousRubriquesModel.create(body);
+  const msg = "La sous rubrique a été crée avec succès";
   return successHandler.Created(res, data, msg);
 });
 
@@ -397,4 +439,6 @@ module.exports = {
   createRubriques,
   getAllTypeFichier,
   createTypeFichier,
+  getAllSousRubriques,
+  createSousRubriques,
 };

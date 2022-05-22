@@ -17,16 +17,16 @@ module.exports = (sequelize, DataTypes) => {
   }
   DepensesLigneBudgetaires.init(
     {
-      rubriqueId: DataTypes.INTEGER,
-      ligneBudgetaireId: DataTypes.INTEGER,
+      sousRubriqueId: DataTypes.INTEGER,
+      partenaireId: DataTypes.INTEGER,
       montant: DataTypes.FLOAT,
       date_creation: DataTypes.DATE,
       motif: DataTypes.STRING,
     },
     {
       sequelize,
-      modelName: "DepensesLigneBudgetairesModel",
-      tableName: "depenses_ligne_budgetaires",
+      modelName: "DepensesModel",
+      tableName: "fin_depenses",
     }
   );
   return DepensesLigneBudgetaires;
