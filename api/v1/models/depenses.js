@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class DepensesLigneBudgetaires extends Model {
+  class Depenses extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -9,13 +9,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.RubriquesModel, {
-        foreignKey: "rubriqueId",
+      this.belongsTo(models.SousRubriquesModel, {
+        foreignKey: "sousRubriqueId",
         as: "depenses_detail",
+      });
+      this.belongsTo(models.PartenaireModel, {
+        foreignKey: "partenaireId",
+        as: "partenaire_detail",
       });
     }
   }
-  DepensesLigneBudgetaires.init(
+  Depenses.init(
     {
       sousRubriqueId: DataTypes.INTEGER,
       partenaireId: DataTypes.INTEGER,
@@ -29,5 +33,5 @@ module.exports = (sequelize, DataTypes) => {
       tableName: "fin_depenses",
     }
   );
-  return DepensesLigneBudgetaires;
+  return Depenses;
 };

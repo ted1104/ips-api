@@ -13,10 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "rubriqueId",
         as: "sous_rubriques",
       });
-      this.hasMany(models.DepensesModel, {
-        foreignKey: "rubriqueId",
-        as: "depenses_detail",
-      });
+
       this.hasOne(models.RubriqueFixeMontantModel, {
         foreignKey: "rubriqueId",
         as: "fixe_montant_detail",

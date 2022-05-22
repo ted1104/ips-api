@@ -76,6 +76,26 @@ const getOneDetailOneRubrique = asyncWrapper(async (req, res) => {
         model: SousRubriquesModel,
         as: "sous_rubriques",
         attributes: attrb.attr_statique_tables,
+        include: [
+          {
+            model: DepensesModel,
+            as: "depenses_detail",
+            attributes: [
+              "id",
+              "montant",
+              "date_creation",
+              "motif",
+              "createdAt",
+            ],
+            include: [
+              {
+                model: PartenaireModel,
+                as: "partenaire_detail",
+                attributes: attrb.attr_statique_tables,
+              },
+            ],
+          },
+        ],
       },
     ],
   });
