@@ -328,6 +328,36 @@ const materielSchemaValidation = Joi.object().keys({
     "any.required": "l'etat du materiel est obligatoire",
   }),
 });
+
+const inventaireSchemaValidation = Joi.object().keys({
+  year: Joi.number().required().messages({
+    "number.base": "l'année est obligatoire",
+    "any.required": "l'année est obligatoire",
+  }),
+  qte: Joi.number().required().min(0).messages({
+    "number.base": "la quantité est obligatoire",
+    "number.min": "la quantité superieure ou egale à 0",
+    "any.required": "la quantité est obligatoire",
+  }),
+  trimestreId: Joi.number().required().messages({
+    "number.base": "le trimestre est obligatoire",
+    "any.required": "le trimestre est obligatoire",
+  }),
+  etat: Joi.string().required().trim().messages({
+    "string.empty": "l'etat du materiel est obligatoire",
+    "string.trim": "l'etat du materiel est obligatoire",
+    "any.required": "l'etat du materiel est obligatoire",
+  }),
+  observation: Joi.string().required().trim().messages({
+    "string.empty": "l'observation sur le materiel est obligatoire",
+    "string.trim": "l'observation sur le materiel est obligatoire",
+    "any.required": "l'observation sur le materiel est obligatoire",
+  }),
+  materielId: Joi.number().required().messages({
+    "number.base": "le materiel est obligatoire",
+    "any.required": "le materiel est obligatoire",
+  }),
+});
 // const uploadfilesMissionValidation = Joi.f
 module.exports = {
   loginSchemaValidation,
@@ -346,4 +376,5 @@ module.exports = {
   sanctionSchemaValidation,
   sousRubriqueTableSchemaValidation,
   materielSchemaValidation,
+  inventaireSchemaValidation,
 };
