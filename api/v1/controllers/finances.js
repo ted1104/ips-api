@@ -49,23 +49,6 @@ const {
   SousRubriquesModel,
 } = require("../models");
 
-// const getAllLigneBudgetaire = asyncWrapper(async (req, res) => {
-//   const data = await LigneBudgetairesModel.findAll({
-//     include: [
-//       {
-//         model: PartenaireModel,
-//         as: "partenaire_ligne_detail",
-//         attributes: ["id", "description", "solde"],
-//       },
-//       {
-//         model: StatusLignesModel,
-//         as: "status_ligne_detail_id",
-//         attributes: ["id", "description", "color"],
-//       },
-//     ],
-//   });
-//   return successHandler.Ok(res, data);
-// });
 const getOneDetailOneRubrique = asyncWrapper(async (req, res) => {
   const { id } = req.params;
   const { ids, uuids: uuid } = splitid(id);
