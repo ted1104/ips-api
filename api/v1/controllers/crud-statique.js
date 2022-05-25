@@ -449,6 +449,22 @@ const getStructureAndAgents = async (req, res) => {
   });
   return successHandler.Ok(res, { agent, structure, partenaire });
 };
+
+/* 
+  #########################
+  #########################
+  #########################
+  ### GET ALL BUREAU && TYPE DOCUMENT ###
+*/
+const getStructureAndTypeDocument = async (req, res) => {
+  const structure = await StructureModel.findAll({
+    attributes: attrb.attr_statique_tables,
+  });
+  const type_document = await TypeDocumentModel.findAll({
+    attributes: attrb.attr_statique_tables,
+  });
+  return successHandler.Ok(res, { structure, type_document });
+};
 module.exports = {
   getAllRole,
   getOneRole,
@@ -477,4 +493,5 @@ module.exports = {
   createSousRubriques,
   getAllTypeDocument,
   createTypeDocument,
+  getStructureAndTypeDocument,
 };

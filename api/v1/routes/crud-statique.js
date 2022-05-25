@@ -17,6 +17,7 @@ const {
   createZoneSante,
   getAllStatique,
   getStructureAndAgents,
+  getStructureAndTypeDocument,
   getTypeReunion,
   createTypeReunion,
   getAllPartenaire,
@@ -65,6 +66,9 @@ router
   .route("/all-agent-all-structure")
   .get(authMiddleware, getStructureAndAgents);
 
+router
+  .route("/all-structure-type-document")
+  .get(authMiddleware, getStructureAndTypeDocument);
 router
   .route("/type-reunion")
   .get(authMiddleware, getTypeReunion)
