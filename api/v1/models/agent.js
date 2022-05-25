@@ -79,8 +79,8 @@ module.exports = (sequelize, DataTypes) => {
       zonesanteId: DataTypes.INTEGER,
       salaire: DataTypes.STRING,
       primes: DataTypes.STRING,
-      dob: DataTypes.DATE,
-      date_engagement: DataTypes.DATE,
+      dob: DataTypes.STRING,
+      date_engagement: DataTypes.STRING,
       status: DataTypes.INTEGER,
     },
     {
