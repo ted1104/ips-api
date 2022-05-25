@@ -23,6 +23,7 @@ const {
   RubriquesModel,
   TypeFichierModel,
   SousRubriquesModel,
+  TypeDocumentModel,
 } = require("../models");
 
 /* 
@@ -157,7 +158,9 @@ const createCategorie = asyncWrapper(async (req, res) => {
 */
 
 const getStructre = asyncWrapper(async (req, res) => {
-  const data = await StructureModel.findAll();
+  const data = await StructureModel.findAll({
+    attributes: attrb.attr_statique_tables,
+  });
   return successHandler.Ok(res, data);
 });
 
@@ -231,6 +234,37 @@ const createTypeReunion = asyncWrapper(async (req, res) => {
   }
   const data = await TypeReunionsModel.create(body);
   const msg = "Le type de reunion a été créée avec succès";
+  return successHandler.Created(res, data, msg);
+});
+
+/* 
+  #########################
+  #########################
+  #########################
+  ### CRUD :===> TYPE DOCUMENT ###
+*/
+
+const getAllTypeDocument = asyncWrapper(async (req, res) => {
+  const data = await TypeDocumentModel.findAll({
+    attributes: attrb.attr_statique_tables,
+  });
+  return successHandler.Ok(res, data);
+});
+
+const createTypeDocument = asyncWrapper(async (req, res) => {
+  const body = req.body;
+  const validation = statiqueTableSchemaValidation.validate(body);
+  const { error, value } = validation;
+  if (error) {
+    throw new BadRequest(error.details[0].message);
+  }
+
+  const checkIfExist = await TypeDocumentModel.findOne({ where: body });
+  if (checkIfExist) {
+    throw new BadRequest("ce type de document existe déjà");
+  }
+  const data = await TypeDocumentModel.create(body);
+  const msg = "Le type de document a été créée avec succès";
   return successHandler.Created(res, data, msg);
 });
 
@@ -441,4 +475,6 @@ module.exports = {
   createTypeFichier,
   getAllSousRubriques,
   createSousRubriques,
+  getAllTypeDocument,
+  createTypeDocument,
 };

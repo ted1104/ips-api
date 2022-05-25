@@ -55,8 +55,8 @@ const agentCreateSchemaValidation = Joi.object().keys({
   }),
   ref_arret_admis_status: Joi.string().allow(null, ""),
   structureId: Joi.number().required().messages({
-    "number.base": "la structure de l'agent ne doit pas être vide",
-    "any.required": "la structure d'affectation de l'agent est obligatoire",
+    "number.base": "le bureau de l'agent ne doit pas être vide",
+    "any.required": "le bureau d'affectation de l'agent est obligatoire",
   }),
   zonesanteId: Joi.number().required().messages({
     "number.base": "la zone de santé de l'agent ne doit pas être vide",
@@ -358,6 +358,22 @@ const inventaireSchemaValidation = Joi.object().keys({
     "any.required": "le materiel est obligatoire",
   }),
 });
+
+const documentSchemaValidation = Joi.object().keys({
+  typeDocumentId: Joi.number().required().messages({
+    "number.base": "le type du document est obligatoire",
+    "any.required": "le type du document est obligatoire",
+  }),
+  structureId: Joi.number().required().messages({
+    "number.base": "le bureau est obligatoire",
+    "any.required": "le bureau est obligatoire",
+  }),
+  titre: Joi.string().required().trim().messages({
+    "string.empty": "le titre du document est obligatoire",
+    "string.trim": "le titre du document est obligatoire",
+    "any.required": "le titre du document est obligatoire",
+  }),
+});
 // const uploadfilesMissionValidation = Joi.f
 module.exports = {
   loginSchemaValidation,
@@ -377,4 +393,5 @@ module.exports = {
   sousRubriqueTableSchemaValidation,
   materielSchemaValidation,
   inventaireSchemaValidation,
+  documentSchemaValidation,
 };

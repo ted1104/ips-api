@@ -18,6 +18,7 @@ const routeBanques = require(`./api/${process.env.VERSION}/routes/banque`);
 const routeDashboard = require(`./api/${process.env.VERSION}/routes/dashboard`);
 const routeFinances = require(`./api/${process.env.VERSION}/routes/finances`);
 const routeMateriels = require(`./api/${process.env.VERSION}/routes/materiel`);
+const routeDocuments = require(`./api/${process.env.VERSION}/routes/document`);
 const routeAuth = require(`./api/${process.env.VERSION}/routes/auth`);
 
 //middlewares
@@ -33,6 +34,7 @@ app.use(`/api/${process.env.VERSION}/reunion`, routeReunions);
 app.use(`/api/${process.env.VERSION}/banque`, routeBanques);
 app.use(`/api/${process.env.VERSION}/finances`, routeFinances);
 app.use(`/api/${process.env.VERSION}/materiel`, routeMateriels);
+app.use(`/api/${process.env.VERSION}/document`, routeDocuments);
 app.use(`/api/${process.env.VERSION}/auth`, routeAuth);
 app.use(`/api/${process.env.VERSION}/dashboard`, routeDashboard);
 app.use(notFoundPage);
