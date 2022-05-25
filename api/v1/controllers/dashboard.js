@@ -34,6 +34,7 @@ const {
   PartenaireModel,
   SanctionsModel,
   ReunionsModel,
+  DocumentsModel,
 } = require("../models");
 
 const getDashboardData = asyncWrapper(async (req, res) => {
@@ -60,6 +61,13 @@ const getDashboardData = asyncWrapper(async (req, res) => {
       },
     },
   });
+  const document = await DocumentsModel.count({
+    where: {
+      createdAt: {
+        [Op.startsWith]: date,
+      },
+    },
+  });
   const agent = await AgentModel.count();
 
   const datas = {
@@ -67,6 +75,7 @@ const getDashboardData = asyncWrapper(async (req, res) => {
     sanction,
     reunion,
     agent,
+    document,
   };
   return successHandler.Ok(res, datas);
 });
