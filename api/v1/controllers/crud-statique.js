@@ -76,7 +76,7 @@ const getGrade = asyncWrapper(async (req, res) => {
 });
 
 const createGrade = asyncWrapper(async (req, res) => {
-  const data = req.body;
+  const body = req.body;
   const validation = statiqueTableSchemaValidation.validate(body);
   const { error, value } = validation;
   if (error) {
@@ -84,11 +84,11 @@ const createGrade = asyncWrapper(async (req, res) => {
   }
   //checking if same grade already exist
 
-  const checkIfExist = await GradeModel.findOne({ where: data });
+  const checkIfExist = await GradeModel.findOne({ where: body });
   if (checkIfExist) {
     throw new BadRequest("cette grade existe déjà");
   }
-  const grade = await GradeModel.create(data);
+  const grade = await GradeModel.create(body);
   const msg = "La grade a été créée avec succès";
   return successHandler.Created(res, grade, msg);
 });
