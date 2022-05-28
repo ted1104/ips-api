@@ -1,6 +1,6 @@
 const asyncWrapper = require("../middlewares/async");
 const { BadRequest, Unauthenticated } = require("../errors");
-const { successHandler, bcryptHelper, attrb } = require("../helpers");
+const { successHandler, bcryptHelper, attrb, splitid } = require("../helpers");
 const { agentCreateSchemaValidation } = require("../validations");
 
 const jwt = require("jsonwebtoken");
@@ -15,36 +15,39 @@ const {
   ZoneSanteModel,
   AgentModel,
   AuthModel,
+  MissionsParticipantsModel,
+  MissionsModel,
+  StatusModel,
 } = require("../models");
 
 const getAllAgents = asyncWrapper(async (req, res) => {
-  console.log(req.user);
   const data = await AgentModel.findAll({
+    order: [["createdAt", "DESC"]],
     include: [
       {
         model: CategorieProfModel,
         as: "categorie_detail_id",
-        attributes: ["id", "description"],
+        attributes: attrb.attr_statique_tables,
       },
       {
         model: FonctionModel,
         as: "fonction_detail_id",
-        attributes: ["id", "description"],
+        attributes: attrb.attr_statique_tables,
       },
       {
         model: StructureModel,
         as: "structure_detail_id",
-        attributes: ["id", "description"],
+        attributes: attrb.attr_statique_tables,
       },
       {
         model: GradeModel,
         as: "grade_detail_id",
-        attributes: ["id", "description"],
+        attributes: attrb.attr_statique_tables,
       },
       {
         model: ZoneSanteModel,
         as: "zone_sante_detail_id",
-        attributes: ["id", "description"],
+        attributes: attrb.attr_statique_tables,
       },
     ],
   });
@@ -84,8 +87,7 @@ const createAgent = asyncWrapper(async (req, res) => {
 
 const getOneAgent = asyncWrapper(async (req, res) => {
   const { id } = req.params;
-  const ids = id.split("--")[0];
-  const uuids = id.split("--")[1];
+  const { ids, uuids } = splitid(id);
   const oneAgent = await AgentModel.findOne({
     where: { id: ids, uuid: uuids },
     attributes: attrb.attr_get_one_agent,
@@ -127,12 +129,49 @@ const getOneAgent = asyncWrapper(async (req, res) => {
           },
         ],
       },
+      {
+        model: MissionsParticipantsModel,
+        as: "agent_participant_detail_id",
+        attributes: ["id"],
+        limit: 5,
+        offset: 0,
+        order: [["createdAt", "DESC"]],
+        include: [
+          {
+            model: MissionsModel,
+            as: "missions_participant_detail_id",
+            attributes: ["id", "uuid", "nom", "date_debut"],
+
+            include: [
+              {
+                model: StatusModel,
+                as: "status_detail_id",
+                attributes: attrb.attr_statique_status,
+              },
+              {
+                model: StructureModel,
+                as: "structure_detail_mission_id",
+                attributes: attrb.attr_statique_tables,
+              },
+            ],
+          },
+        ],
+      },
     ],
   });
 
   if (!oneAgent) {
     throw new BadRequest("Aucun agent trouvé");
   }
-  return successHandler.Ok(res, oneAgent);
+
+  const nbMission = await MissionsParticipantsModel.count({
+    where: { agentId: ids },
+  });
+
+  const datas = {
+    agent: oneAgent,
+    nbre_mission: nbMission,
+  };
+  return successHandler.Ok(res, datas);
 });
 module.exports = { getAllAgents, getOneAgent, createAgent };

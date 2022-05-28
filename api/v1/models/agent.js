@@ -34,6 +34,28 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "agentId",
         as: "agent_detail_id",
       });
+
+      this.hasMany(models.MissionsParticipantsModel, {
+        foreignKey: "agentId",
+        as: "mission_participant_id",
+      });
+
+      this.belongsToMany(models.MissionsParticipantsModel, {
+        through: "agentId",
+      });
+      this.hasMany(models.MissionsParticipantsModel, {
+        foreignKey: "agentId",
+        as: "agent_participant_detail_id",
+      });
+
+      this.hasMany(models.ReunionsModel, {
+        foreignKey: "created_by",
+        as: "user_create",
+      });
+      this.hasMany(models.SanctionsModel, {
+        foreignKey: "created_by",
+        as: "creer_par",
+      });
     }
   }
   Agent.init(
@@ -57,8 +79,8 @@ module.exports = (sequelize, DataTypes) => {
       zonesanteId: DataTypes.INTEGER,
       salaire: DataTypes.STRING,
       primes: DataTypes.STRING,
-      dob: DataTypes.DATE,
-      date_engagement: DataTypes.DATE,
+      dob: DataTypes.STRING,
+      date_engagement: DataTypes.STRING,
       status: DataTypes.INTEGER,
     },
     {

@@ -13,6 +13,14 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "structureId",
         as: "structure_detail_id",
       });
+      this.hasMany(models.MissionsModel, {
+        foreignKey: "structureId",
+        as: "structure_detail_mission_id",
+      });
+      this.hasMany(models.DocumentsModel, {
+        foreignKey: "structureId",
+        as: "structure_doc",
+      });
     }
   }
   structure.init(

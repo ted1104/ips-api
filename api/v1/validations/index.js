@@ -41,7 +41,7 @@ const agentCreateSchemaValidation = Joi.object().keys({
     "string.empty": "le niveau d'étude de l'agent ne doit pas être vide",
     "any.required": "le niveau d'étude de l'agent est obligatoire",
   }),
-  num_cnom_cnop_cnoi: Joi.string(),
+  num_cnom_cnop_cnoi: Joi.string().allow(null, ""),
   catProfId: Joi.number().required().messages({
     "number.base":
       "la categorie professionnelle de l'agent ne doit pas être vide",
@@ -53,10 +53,10 @@ const agentCreateSchemaValidation = Joi.object().keys({
       "la référence d'affectation de l'agent ne doit pas être vide",
     "any.required": "le référence d'affectation de l'agent est obligatoire",
   }),
-  ref_arret_admis_status: Joi.string(),
+  ref_arret_admis_status: Joi.string().allow(null, ""),
   structureId: Joi.number().required().messages({
-    "number.base": "la structure de l'agent ne doit pas être vide",
-    "any.required": "la structure d'affectation de l'agent est obligatoire",
+    "number.base": "le bureau de l'agent ne doit pas être vide",
+    "any.required": "le bureau d'affectation de l'agent est obligatoire",
   }),
   zonesanteId: Joi.number().required().messages({
     "number.base": "la zone de santé de l'agent ne doit pas être vide",
@@ -104,8 +104,294 @@ const registerSchemaValidation = Joi.object().keys({
     "any.required": "l'id de l'agent est obligatoire",
   }),
 });
+
+const missionSchemaValidation = Joi.object().keys({
+  nom: Joi.string().required().messages({
+    "string.empty": "le nom de la mission est obligatoire",
+    "any.required": "le nom de la mission est obligatoire",
+  }),
+  agents: Joi.array()
+    .required()
+    .items(
+      Joi.object()
+        .required()
+        .keys({
+          agentId: Joi.number().required().messages({
+            "number.base":
+              "un ou plusieurs participants à la mission sont obligatoire",
+            "number.empty":
+              "un ou plusieurs participants à la mission sont obligatoire",
+            "any.required": "les participants à la mission sont obligatoire",
+          }),
+        })
+    )
+    .messages({
+      "array.base":
+        "un ou plusieurs participants à la mission sont obligatoire",
+      "array.includesRequiredUnknowns":
+        "un ou plusieurs participants à la mission sont obligatoire",
+      "any.required":
+        "un ou plusieurs participants à la mission sont obligatoire",
+    }),
+  date_debut: Joi.date().required().messages({
+    "date.base": "la date du debut de la mission est obligatoire",
+    "any.required": "la date du debut de la mission est obligatoire",
+  }),
+  structureId: Joi.number().required().messages({
+    "number.base": "cette mission doit être affecté à une structure",
+    "any.required": "cette mission doit être affecté à une structure",
+  }),
+  partenaireId: Joi.number().required().messages({
+    "number.base": "la source de fond de cette mission est obligatoire",
+    "any.required": "la source de fond de cette mission est obligatoire",
+  }),
+});
+
+const fichierMissionSchemaValidation = Joi.object().keys({
+  missionId: Joi.number().required().messages({
+    "number.base": "Veuillez selectionner une mission",
+    "any.required": "Veuillez selectionner une mission",
+  }),
+  typefichierId: Joi.number().required().messages({
+    "number.base": "le type de fichier est obligatoire",
+    "any.required": "le type de fichier est obligatoire",
+  }),
+  name_fichier: Joi.string().required().messages({
+    "string.empty": "le nom du fichier est obligatoire",
+    "any.required": "le nom du fichier est obligatoire",
+  }),
+});
+
+const filterIntervalSchemaValidation = Joi.object().keys({
+  date_debut: Joi.date().required().messages({
+    "date.base": "la date du debut du filtre est obligatoire",
+    "any.required": "la date du debut du filtre est obligatoire",
+  }),
+  date_fin: Joi.date().required().messages({
+    "date.base": "la date de la fin du filtre est obligatoire",
+    "any.required": "la date de la fin du filtre est obligatoire",
+  }),
+});
+const reunionSchemaValidation = Joi.object().keys({
+  titre: Joi.string().required().messages({
+    "string.base": "le titre de la reunion est obligatoire",
+    "string.empty": "le titre de la reunion est obligatoire",
+    "any.required": "le titre de la reunion est obligatoire",
+  }),
+  typeReunionId: Joi.number().required().messages({
+    "number.base": "Veuillez selectionner le type de la reunion",
+    "any.required": "Veuillez selectionner le type de la reunion",
+  }),
+  date_reunion: Joi.date().required().messages({
+    "date.base": "la date de la reunion est obligatoire",
+    "any.required": "la date de la reunion est obligatoire",
+  }),
+  date_adoption: Joi.date().required().messages({
+    "date.base": "la date de l'adoption la reunion est obligatoire",
+    "any.required": "la date de l'adoption la reunion est obligatoire",
+  }),
+  created_by: Joi.number().required().messages({
+    "number.base": "il semblerait que votre session est deja expiré",
+    "any.required": "il semblerait que votre session est deja expiré",
+  }),
+});
+
+const fichierReunionSchemaValidation = Joi.object().keys({
+  reunionId: Joi.number().required().messages({
+    "number.base": "Veuillez selectionner une reunion",
+    "any.required": "Veuillez selectionner une reunion",
+  }),
+  typefichierId: Joi.number().required().messages({
+    "number.base": "le type de fichier est obligatoire",
+    "any.required": "le type de fichier est obligatoire",
+  }),
+  name_fichier: Joi.string().required().messages({
+    "string.empty": "le nom du fichier est obligatoire",
+    "any.required": "le nom du fichier est obligatoire",
+  }),
+});
+
+const sousRubriqueTableSchemaValidation = Joi.object().keys({
+  rubriqueId: Joi.number().required().messages({
+    "number.base": "la rubrique est obligatoire",
+    "any.required": "la rubrique est obligatoire",
+  }),
+  description: Joi.string().required().messages({
+    "string.empty": "la description est obligatoire",
+    "any.required": "la description est obligatoire",
+  }),
+});
+const statiqueTableSchemaValidation = Joi.object().keys({
+  description: Joi.string().required().messages({
+    "string.empty": "la description est obligatoire",
+    "any.required": "la description est obligatoire",
+  }),
+});
+
+const operationBanqueSchemaValidation = Joi.object().keys({
+  typeOperationId: Joi.number().required().messages({
+    "number.base": "le type de l'operation est obligatoire",
+    "any.required": "le type de l'operation est obligatoire",
+  }),
+  partenaireId: Joi.number().required().messages({
+    "number.base": "le partenaire est obligatoire",
+    "any.required": "le partenaire est obligatoire",
+  }),
+  montant: Joi.number().required().messages({
+    "number.base": "le montant est obligatoire",
+    "any.required": "le montant est obligatoire",
+  }),
+  motif: Joi.string().required().messages({
+    "string.empty": "la motif de l'operation est obligatoire",
+    "any.required": "la motif de l'operation obligatoire",
+  }),
+});
+
+const ligneBudgetaireSchemaValidation = Joi.object().keys({
+  description: Joi.string().required().messages({
+    "string.empty": "la description de la ligne budgetaire est obligatoire",
+    "any.required": "la description de la ligne budgetaire est obligatoire",
+  }),
+
+  partenaireId: Joi.number().required().messages({
+    "number.base": "le partenaire est obligatoire",
+    "any.required": "le partenaire est obligatoire",
+  }),
+  montant: Joi.number().required().messages({
+    "number.base": "le montant loué à cette ligne budgetaire est obligatoire",
+    "any.required": "le montant loué à cette ligne budgetaire est obligatoire",
+  }),
+});
+
+const depenseSchemaValidation = Joi.object().keys({
+  sousRubriqueId: Joi.number().required().messages({
+    "number.base": "la sous rubrique est obligatoire",
+    "any.required": "la sous rubriqueId est obligatoire",
+  }),
+  partenaireId: Joi.number().required().messages({
+    "number.base": "le partenaire est obligatoire",
+    "any.required": "le partenaire est obligatoire",
+  }),
+  montant: Joi.number().required().messages({
+    "number.base": "le montant depensé est obligatoire",
+    "any.required": "le montant depensé obligatoire",
+  }),
+  motif: Joi.string().required().messages({
+    "string.empty": "le motif est obligatoire",
+    "any.required": "le motif est obligatoire",
+  }),
+});
+
+const rubriqueFixeMontantSchemaValidation = Joi.object().keys({
+  rubriqueId: Joi.number().required().messages({
+    "number.base": "la rubrique est obligatoire",
+    "any.required": "la rubriqueId est obligatoire",
+  }),
+  ligneBudgetaireId: Joi.number().required().messages({
+    "number.base": "la ligne budgetaire est obligatoire",
+    "any.required": "la ligne budgetaire est obligatoire",
+  }),
+  montant: Joi.number().required().messages({
+    "number.base": "le montant depensé est obligatoire",
+    "any.required": "le montant depensé obligatoire",
+  }),
+});
+
+const sanctionSchemaValidation = Joi.object().keys({
+  missionId: Joi.number().required().messages({
+    "number.base": "la mission à sanctionner est obligatoire",
+    "any.required": "la mission à sanctionner est obligatoire",
+  }),
+  description: Joi.string().required().trim().messages({
+    "string.empty": "la description de la sanction est obligatoire",
+    "string.trim": "la description de la sanction est obligatoire",
+    "any.required": "la description de la sanction est obligatoire",
+  }),
+  created_by: Joi.number().required().messages({
+    "number.base": "le createur de la sanction est obligatoire",
+    "any.required": "le createur de la sanction est obligatoire",
+  }),
+});
+const materielSchemaValidation = Joi.object().keys({
+  description: Joi.string().required().trim().messages({
+    "string.empty": "le nom du materiel est obligatoire",
+    "string.trim": "le nom du materiel est obligatoire",
+    "any.required": "le nom du materiel est obligatoire",
+  }),
+  qte: Joi.number().required().messages({
+    "number.base": "la quantité est obligatoire",
+    "any.required": "la quantité  est obligatoire",
+  }),
+  etat: Joi.string().required().trim().messages({
+    "string.empty": "l'etat du materiel est obligatoire",
+    "string.trim": "l'etat du materiel est obligatoire",
+    "any.required": "l'etat du materiel est obligatoire",
+  }),
+});
+
+const inventaireSchemaValidation = Joi.object().keys({
+  year: Joi.number().required().messages({
+    "number.base": "l'année est obligatoire",
+    "any.required": "l'année est obligatoire",
+  }),
+  qte: Joi.number().required().min(0).messages({
+    "number.base": "la quantité est obligatoire",
+    "number.min": "la quantité superieure ou egale à 0",
+    "any.required": "la quantité est obligatoire",
+  }),
+  trimestreId: Joi.number().required().messages({
+    "number.base": "le trimestre est obligatoire",
+    "any.required": "le trimestre est obligatoire",
+  }),
+  etat: Joi.string().required().trim().messages({
+    "string.empty": "l'etat du materiel est obligatoire",
+    "string.trim": "l'etat du materiel est obligatoire",
+    "any.required": "l'etat du materiel est obligatoire",
+  }),
+  observation: Joi.string().required().trim().messages({
+    "string.empty": "l'observation sur le materiel est obligatoire",
+    "string.trim": "l'observation sur le materiel est obligatoire",
+    "any.required": "l'observation sur le materiel est obligatoire",
+  }),
+  materielId: Joi.number().required().messages({
+    "number.base": "le materiel est obligatoire",
+    "any.required": "le materiel est obligatoire",
+  }),
+});
+
+const documentSchemaValidation = Joi.object().keys({
+  typeDocumentId: Joi.number().required().messages({
+    "number.base": "le type du document est obligatoire",
+    "any.required": "le type du document est obligatoire",
+  }),
+  structureId: Joi.number().required().messages({
+    "number.base": "le bureau est obligatoire",
+    "any.required": "le bureau est obligatoire",
+  }),
+  titre: Joi.string().required().trim().messages({
+    "string.empty": "le titre du document est obligatoire",
+    "string.trim": "le titre du document est obligatoire",
+    "any.required": "le titre du document est obligatoire",
+  }),
+});
+// const uploadfilesMissionValidation = Joi.f
 module.exports = {
   loginSchemaValidation,
   agentCreateSchemaValidation,
   registerSchemaValidation,
+  missionSchemaValidation,
+  fichierMissionSchemaValidation,
+  filterIntervalSchemaValidation,
+  reunionSchemaValidation,
+  fichierReunionSchemaValidation,
+  statiqueTableSchemaValidation,
+  operationBanqueSchemaValidation,
+  ligneBudgetaireSchemaValidation,
+  depenseSchemaValidation,
+  rubriqueFixeMontantSchemaValidation,
+  sanctionSchemaValidation,
+  sousRubriqueTableSchemaValidation,
+  materielSchemaValidation,
+  inventaireSchemaValidation,
+  documentSchemaValidation,
 };

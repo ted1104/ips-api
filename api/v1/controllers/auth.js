@@ -42,7 +42,7 @@ const login = asyncWrapper(async (req, res) => {
       },
       {
         model: RoleModel,
-        as: "role_id_detail",
+        as: "role_detail_id",
         attributes: ["id", "description"],
       },
     ],
@@ -68,10 +68,19 @@ const login = asyncWrapper(async (req, res) => {
   }
 
   // creating token
-  const { id } = existUser;
-  const token = jwt.sign({ id }, process.env.JWT_SECRET_KEY, {
-    expiresIn: process.env.EXPIRED_IN,
-  });
+  const { id, roleId: role, agent_detail_id } = existUser;
+  const token = jwt.sign(
+    {
+      id,
+      role,
+      structure: agent_detail_id.structureId,
+      agentId: agent_detail_id.id,
+    },
+    process.env.JWT_SECRET_KEY,
+    {
+      expiresIn: process.env.EXPIRED_IN,
+    }
+  );
   return successHandler.Ok(res, { token: token, user: existUser });
 });
 
